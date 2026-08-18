@@ -2,7 +2,7 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { createTask, deleteTask, getTasks, Task, updateTask } from '../repositories/tasks';
 import { InputModal } from '../components/InputModal';
-import { RoundedIconButton } from '../components/rounded-icon-button';
+import { RoundedIconButton } from '../components/RoundedIconButton';
 import { SwipeableItem } from '../components/SwipeableItem';
 
 

@@ -1,6 +1,6 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import RoundedCheckbox from './rounded-checkbox';
-import StarCheckbox from './star-checkbox';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import RoundedCheckbox from './RoundedCheckbox';
+import StarCheckbox from './StarCheckbox';
 import { Task } from '../repositories/tasks';
 
 

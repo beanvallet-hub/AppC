@@ -9,6 +9,7 @@ import {
 import { createNativeBottomTabNavigator, createNativeBottomTabScreen } from '@react-navigation/bottom-tabs/unstable';
 import { useEffect, useState } from 'react';
 import { initializeApp } from './src/initialize';
+import TokensScreen from './src/screens/TokensScreen';
 
 
 const TabStack = createNativeBottomTabNavigator({
@@ -28,6 +29,15 @@ const TabStack = createNativeBottomTabNavigator({
         tabBarIcon: {
           type: 'image',
           source: require('./assets/tabIcons/explore.png'),
+        }
+      }
+    }),
+    Tokens: createNativeBottomTabScreen({
+      screen: TokensScreen,
+      options: {
+        tabBarIcon: {
+          type: 'image',
+          source: require('./assets/tabIcons/token.png'),
         }
       }
     }),
