@@ -1,4 +1,4 @@
-import type * as SQLite from 'expo-sqlite';
+import { NitroSQLiteConnection } from 'react-native-nitro-sqlite';
 
 const tasks = [
     { id: 1, name: 'task 1', isCompleted: false, isFavorite: false, },
@@ -22,46 +22,53 @@ const tasks = [
 ];
 
 
-export async function loadSampleData(db: SQLite.SQLiteDatabase) {
-    const app = await db.getAllAsync(
-        'SELECT * FROM application limit 1'
-    );
+export async function loadSampleData(db: NitroSQLiteConnection) {
+    // const { results } = await db.executeAsync(
+    //     'DELETE FROM application'
+    // );
 
-    const hasAppRec = app.length > 0;
-    const dataLoaded = hasAppRec && (app as any)[0].is_init_data_loaded;
+    // const { rowsAffected } = await db.executeAsync(
+    //     'DELETE FROM tasks'
+    // );
 
-    if (!dataLoaded) {
-        await db.runAsync(
-            `DELETE FROM tasks;
-             UPDATE sqlite_sequence SET seq = 0 WHERE name = 'tasks';`,
-        );
+    // alert(rowsAffected);
 
-        await db.runAsync(
-            'INSERT OR IGNORE INTO application (id, name, is_init_data_loaded) VALUES (?, ?, ?)',
-            1, 'AppA', 0
-        );
+    // const { results } = await db.executeAsync(
+    //     'SELECT * FROM application limit 1'
+    // );
 
-        await db.withTransactionAsync(async () => {
-            const statement = await db.prepareAsync(
-                'INSERT INTO tasks (id, name, is_completed, is_favorite) VALUES (?, ?, ?, ?)'
-            );
+    // const hasAppRec = results.length > 0;
+    // const dataLoaded = hasAppRec && (results[0])?.is_init_data_loaded;
 
-            try {
-                for (const task of tasks) {
-                    await statement.executeAsync([task.id, task.name, task.isCompleted, task.isFavorite]);
-                }
-            } finally {
-                await statement.finalizeAsync();
-            }
-        });
+    // if (!dataLoaded) {
+    //     await db.executeAsync(
+    //         `DELETE FROM tasks;
+    //          UPDATE sqlite_sequence SET seq = 0 WHERE name = 'tasks';`,
+    //     );
 
-        await db.runAsync(`
-            UPDATE application
-            SET is_init_data_loaded = ?
-            WHERE id = ?
-            `,
-            1,
-            1
-        );
-    }
+    //     await db.executeAsync(
+    //         'INSERT OR IGNORE INTO application (id, name, is_init_data_loaded) VALUES (?, ?, ?)',
+    //         [1, 'AppA', 0]
+    //     );
+
+    //     // await db.withTransactionAsync(async () => {
+    //         const statement = 'INSERT INTO tasks (id, name, is_completed, is_favorite) VALUES (?, ?, ?, ?)';
+
+    //         // try {
+    //             for (const task of tasks) {
+    //                 await db.executeAsync(statement, [task.id, task.name, task.isCompleted, task.isFavorite]);
+    //             }
+    //         // } finally {
+    //         //     await statement.finalizeAsync();
+    //         // }
+    //     // });
+
+    //     await db.executeAsync(`
+    //         UPDATE application
+    //         SET is_init_data_loaded = ?
+    //         WHERE id = ?
+    //         `,
+    //         [1,1]
+    //     );
+    // }
 }

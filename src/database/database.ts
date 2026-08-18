@@ -1,19 +1,11 @@
-import * as SQLite from 'expo-sqlite';
+import { NitroSQLiteConnection, open } from 'react-native-nitro-sqlite';
 
-let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
+let dbPromise: NitroSQLiteConnection | null = null;
 
 export function getDatabase() {
   if (!dbPromise) {
-    dbPromise = initializeDatabase();
+    dbPromise = open({ name: 'appcDb.sqlite' });
   }
 
   return dbPromise;
-}
-
-async function initializeDatabase() {
-  const db = await SQLite.openDatabaseAsync('app.db');
-
-  console.log('database initialized');
-
-  return db;
 }

@@ -1,9 +1,10 @@
-import type * as SQLite from 'expo-sqlite';
+import { NitroSQLiteConnection, open } from 'react-native-nitro-sqlite';
 
-export async function migrate(db: SQLite.SQLiteDatabase) {
-  await db.execAsync(`
-    PRAGMA journal_mode = WAL;
-  `);
+
+export async function migrate(db: NitroSQLiteConnection) {
+  // await db.execAsync(`
+  //   PRAGMA journal_mode = WAL;
+  // `);
 
   // await db.execAsync(`
   //   DROP TABLE application;
@@ -13,7 +14,7 @@ export async function migrate(db: SQLite.SQLiteDatabase) {
   //   DROP TABLE tasks;
   // `);
 
-  await db.execAsync(`
+  await db.executeAsync(`
     CREATE TABLE IF NOT EXISTS application (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -21,7 +22,7 @@ export async function migrate(db: SQLite.SQLiteDatabase) {
     );
   `);
 
-  await db.execAsync(`
+  await db.executeAsync(`
     CREATE TABLE IF NOT EXISTS tasks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,

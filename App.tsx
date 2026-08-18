@@ -1,7 +1,6 @@
-import TasksScreen from './src/screens/TasksScreen';
-import HomeScreen from './src/screens/HomeScreen';
+import {TasksScreen} from './src/screens/TasksScreen';
+import {HomeScreen} from './src/screens/HomeScreen';
 import { createStaticNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ActivityIndicator, StatusBar, useColorScheme, View } from 'react-native';
 import {
   SafeAreaProvider,
@@ -9,20 +8,8 @@ import {
 } from 'react-native-safe-area-context';
 import { createNativeBottomTabNavigator, createNativeBottomTabScreen } from '@react-navigation/bottom-tabs/unstable';
 import { useEffect, useState } from 'react';
+import { initializeApp } from './src/initialize';
 
-const RootStack = createNativeStackNavigator({
-  initialRouteName: 'Tasks',
-  screens: {
-    Home: {
-      screen: HomeScreen,
-      options: { title: 'Welcome' },
-    },
-    Tasks: {
-      screen: TasksScreen,
-      options: { title: 'Second Screen' },
-    },
-  },
-});
 
 const TabStack = createNativeBottomTabNavigator({
   screens: {
@@ -63,15 +50,15 @@ function App() {
 
 function AppContent() {
   const safeAreaInsets = useSafeAreaInsets();
-  const [ready, setReady] = useState(true);
+  const [ready, setReady] = useState(false);
 
-  // useEffect(() => {
-  //   initializeApp()
-  //     .then(() => setReady(true))
-  //     .catch((error) => {
-  //       console.error('Failed to initialize app:', error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    initializeApp()
+      .then(() => setReady(true))
+      .catch((error) => {
+        console.error('Failed to initialize app:', error);
+      });
+  }, []);
 
 
   if (!ready) {

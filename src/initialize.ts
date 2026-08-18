@@ -1,6 +1,6 @@
+import { getAxios } from "./api/client";
 import { getDatabase } from "./database/database";
 import { migrate } from "./database/migrations";
-// import { getAxios } from "./api/client";
 import { loadSampleData } from "./database/sample-data";
 
 
@@ -15,11 +15,11 @@ export function initializeApp() {
 }
 
 async function initialize() {
-  const db = await getDatabase();
+  const db = getDatabase();
 
-  // await migrate(db);
+  await migrate(db);
 
-  // await loadSampleData(db);
+  await loadSampleData(db);
 
-  // getAxios();
+  getAxios();
 }
