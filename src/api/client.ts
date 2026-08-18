@@ -1,5 +1,4 @@
 import axios, { Axios } from 'axios';
-import {API_URL} from '../constants/static';
 
 let axiosPromise: Axios | null = null;
 
@@ -12,10 +11,8 @@ export function getAxios() {
 }
 
 function initializeAxios() {
-    console.log('Axios initialized');
-
     const backendApi = axios.create({
-        baseURL: API_URL,
+        baseURL: process.env.API_URL,
         headers: {
             'Content-Type': 'application/json',
         },
