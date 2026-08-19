@@ -1,11 +1,12 @@
-import { Modal, Pressable, StyleSheet, TextInput, View, Text } from 'react-native';
+import { Modal, Pressable, StyleSheet, TextInput, View, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
+import { useLanguage } from '../i18n/useLanguage';
 
 type InputModalProps = {
-    isOpen: boolean; 
-    initialValue: string; 
-    setIsOpen: (value: boolean) => void; 
-    onClose: () => void; 
+    isOpen: boolean;
+    initialValue: string;
+    setIsOpen: (value: boolean) => void;
+    onClose: () => void;
     onSave: (newValue: string) => void;
 }
 
@@ -13,6 +14,8 @@ type InputModalProps = {
 export function InputModal({ isOpen, initialValue, setIsOpen, onClose, onSave }: InputModalProps) {
     const inputRef = useRef<TextInput>(null);
     const [inpVal, setInpVal] = useState(initialValue);
+
+    const { translation } = useLanguage();
 
     const handleClose = () => {
         inputRef.current?.blur();
@@ -27,7 +30,6 @@ export function InputModal({ isOpen, initialValue, setIsOpen, onClose, onSave }:
         inputRef.current?.blur();
         setInpVal('');
 
-        // setIsOpen(false);
         onSave(newValue);
     };
 
@@ -46,9 +48,11 @@ export function InputModal({ isOpen, initialValue, setIsOpen, onClose, onSave }:
                 });
             }}
             onRequestClose={handleClose}>
-            <View style={styles.centeredView}>
+            <KeyboardAvoidingView style={styles.centeredView}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
                 <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Task</Text>
+                    <Text style={styles.modalText}>{translation('inputModal.task')}</Text>
 
                     <TextInput
                         ref={inputRef}
@@ -63,18 +67,18 @@ export function InputModal({ isOpen, initialValue, setIsOpen, onClose, onSave }:
                             style={[styles.button, styles.buttonOpen]}
                             onPress={handleClose}>
 
-                            <Text style={styles.textStyle}>Cancel</Text>
+                            <Text style={styles.textStyle}>{translation('inputModal.cancel')}</Text>
                         </Pressable>
 
                         <Pressable
                             style={[styles.button, styles.buttonClose]}
                             onPress={handleSave}>
 
-                            <Text style={styles.textStyle}>Save</Text>
+                            <Text style={styles.textStyle}>{translation('inputModal.save')}</Text>
                         </Pressable>
                     </View>
                 </View>
-            </View>
+            </KeyboardAvoidingView>
         </Modal>
     );
 }

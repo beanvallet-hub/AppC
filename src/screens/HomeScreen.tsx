@@ -4,12 +4,16 @@ import { createTask, deleteTask, getTasks, Task, updateTask } from '../api/task.
 import { InputModal } from '../components/InputModal';
 import { RoundedIconButton } from '../components/RoundedIconButton';
 import { SwipeableItem } from '../components/SwipeableItem';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLanguage } from '../i18n/useLanguage';
 
 
 export function HomeScreen() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  const { translation } = useLanguage();
 
   useEffect(() => {
     getTasks().then((res) => {
@@ -19,6 +23,8 @@ export function HomeScreen() {
       }
     }).catch((err) => {
       console.log('Error loading tasks!');
+
+      alert('failed to load tasks' + err.message);
     });
   }, []);
 
@@ -83,14 +89,14 @@ export function HomeScreen() {
   };
 
   return (
-    <View
+    <SafeAreaView
       style={[styles.scrollView, { backgroundColor: 'white' }]}
     >
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <View style={styles.titleRow}>
             <View style={{ flexGrow: 1 }}>
-              <Text style={{ fontSize: 24, fontWeight: 700 }}>Home Screen</Text>
+              <Text style={{ fontSize: 24, fontWeight: 700 }}>{translation('navigation.home')}</Text>
             </View>
 
             <RoundedIconButton size={48} onPress={() => {
@@ -99,7 +105,7 @@ export function HomeScreen() {
           </View>
 
           <Text style={styles.centerText}>
-            Saved on Server
+            {translation('home.subtitle')}
           </Text>
         </View>
 
@@ -116,7 +122,7 @@ export function HomeScreen() {
       </View>
 
       <InputModal isOpen={modalVisible} onSave={handleSave} onClose={handleClose} initialValue={activeTask?.name || ''} setIsOpen={setModalVisible} />
-    </View>
+    </SafeAreaView>
   );
 }
 

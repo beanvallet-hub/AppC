@@ -2,15 +2,15 @@ import axios, { Axios } from 'axios';
 
 let axiosPromise: Axios | null = null;
 
-export function getAxios() {
+export async function  getAxios() {
     if (!axiosPromise) {
-        axiosPromise = initializeAxios();
+        axiosPromise = await initializeAxios();
     }
 
     return axiosPromise;
 }
 
-function initializeAxios() {
+async function initializeAxios() {
     const backendApi = axios.create({
         baseURL: process.env.API_URL,
         headers: {

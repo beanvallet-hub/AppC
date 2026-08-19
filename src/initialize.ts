@@ -21,5 +21,5 @@ async function initialize() {
 
   await loadSampleData(db);
 
-  getAxios();
+  await getAxios();
 }

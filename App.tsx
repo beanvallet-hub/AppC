@@ -1,51 +1,64 @@
-import {TasksScreen} from './src/screens/TasksScreen';
-import {HomeScreen} from './src/screens/HomeScreen';
-import { createStaticNavigation } from '@react-navigation/native';
+import './src/i18n';
+
+import { TasksScreen } from './src/screens/TasksScreen';
+import { HomeScreen } from './src/screens/HomeScreen';
 import { ActivityIndicator, StatusBar, useColorScheme, View } from 'react-native';
 import {
   SafeAreaProvider,
-  useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import { createNativeBottomTabNavigator, createNativeBottomTabScreen } from '@react-navigation/bottom-tabs/unstable';
+import { createNativeBottomTabNavigator } from '@react-navigation/bottom-tabs/unstable';
 import { useEffect, useState } from 'react';
 import { initializeApp } from './src/initialize';
 import TokensScreen from './src/screens/TokensScreen';
+import { useLanguage } from './src/i18n/useLanguage';
+import { NavigationContainer } from '@react-navigation/native';
 
 
-const TabStack = createNativeBottomTabNavigator({
-  screens: {
-    Home: createNativeBottomTabScreen({
-      screen: HomeScreen,
-      options: {
-        tabBarIcon: {
-          type: 'image',
-          source: require('./assets/tabIcons/home.png'),
-        }
-      }
-    }),
-    Tasks: createNativeBottomTabScreen({
-      screen: TasksScreen,
-      options: {
-        tabBarIcon: {
-          type: 'image',
-          source: require('./assets/tabIcons/explore.png'),
-        }
-      }
-    }),
-    Tokens: createNativeBottomTabScreen({
-      screen: TokensScreen,
-      options: {
-        tabBarIcon: {
-          type: 'image',
-          source: require('./assets/tabIcons/token.png'),
-        }
-      }
-    }),
-  },
-});
+const Tab = createNativeBottomTabNavigator();
 
-const Navigation = createStaticNavigation(TabStack);
+export function TabNavigator() {
+  const { translation } = useLanguage();
 
+  return (
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Homee"
+        component={HomeScreen}
+        options={{
+          title: translation('navigation.home'),
+          tabBarIcon: {
+            type: 'image',
+            source: require('./assets/tabIcons/home.png'),
+          },
+        }}
+      />
+
+      <Tab.Screen
+        name="Tasks"
+        component={TasksScreen}
+        options={{
+          title: translation('navigation.tasks'),
+          tabBarIcon: {
+            type: 'image',
+            source: require('./assets/tabIcons/explore.png'),
+          }
+        }}
+      />
+
+      <Tab.Screen
+        name="Tokens"
+        component={TokensScreen}
+        options={{
+          title: translation('navigation.settings'),
+          tabBarIcon: {
+            type: 'image',
+            source: require('./assets/tabIcons/token.png'),
+          }
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -59,7 +72,6 @@ function App() {
 }
 
 function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -80,7 +92,9 @@ function AppContent() {
   }
 
   return (
-    <Navigation />
+    <NavigationContainer>
+      <TabNavigator />
+    </NavigationContainer>
   );
 }
 

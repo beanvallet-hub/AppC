@@ -4,12 +4,16 @@ import { createTask, deleteTask, getTasks, Task, updateTask } from '../repositor
 import { InputModal } from '../components/InputModal';
 import { RoundedIconButton } from '../components/RoundedIconButton';
 import { SwipeableItem } from '../components/SwipeableItem';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLanguage } from '../i18n/useLanguage';
 
 
 export function TasksScreen() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  const { translation } = useLanguage();
 
   useEffect(() => {
     getTasks().then((tasks) => {
@@ -67,14 +71,14 @@ export function TasksScreen() {
   };
 
   return (
-    <View
+    <SafeAreaView
       style={[styles.scrollView, { backgroundColor: 'white' }]}
     >
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <View style={styles.titleRow}>
             <View style={{ flexGrow: 1 }}>
-              <Text style={{ fontSize: 24, fontWeight: 700 }}>Tasks Screen 2</Text>
+              <Text style={{ fontSize: 24, fontWeight: 700 }}>{translation('navigation.tasks')}</Text>
             </View>
 
             <RoundedIconButton size={48} onPress={() => {
@@ -83,7 +87,7 @@ export function TasksScreen() {
           </View>
 
           <Text style={styles.centerText}>
-            Saved on App
+            {translation('taskScreen.subtitle')}
           </Text>
         </View>
 
@@ -100,7 +104,7 @@ export function TasksScreen() {
       </View>
 
       <InputModal isOpen={modalVisible} onSave={handleSave} onClose={handleClose} initialValue={activeTask?.name || ''} setIsOpen={setModalVisible} />
-    </View>
+    </SafeAreaView>
   );
 }
 

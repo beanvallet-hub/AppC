@@ -36,7 +36,7 @@ const StarCheckbox = ({ initialValue = false, onValueChange, size = 28, activeCo
             ]}
         >
             {isChecked ? <Star color={activeColor} fill={activeColor} size={size * 0.8} strokeWidth={3} /> : 
-             <Star color="#939393" size={size * 0.8} strokeWidth={3} />}
+             <Star color="#939393" size={size * 0.8} strokeWidth={2} />}
         </Pressable>
     );
 };

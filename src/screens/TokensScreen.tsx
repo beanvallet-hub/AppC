@@ -1,7 +1,11 @@
-import { Button, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useState } from 'react';
 import { getSecureItem, setSecureItem } from '../utils/keychain';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { EllipsisVertical } from 'lucide-react-native';
+import { SettingsModal } from '../components/SettingsModal';
+import { useLanguage } from '../i18n/useLanguage';
+
 
 async function save(key: string, value: string) {
   await setSecureItem(key, value);
@@ -24,9 +28,11 @@ async function getValueFor(key: string) {
 export default function TokensScreen() {
   const [key, onChangeKey] = useState('');
   const [value, onChangeValue] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const safeAreaInsets = useSafeAreaInsets();
-
+  const { translation } = useLanguage();
+  
   const insets = {
     ...safeAreaInsets,
     bottom: safeAreaInsets.bottom + 130,
@@ -46,66 +52,91 @@ export default function TokensScreen() {
   });
 
   return (
-    <ScrollView
-      style={[styles.scrollView]}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Secure Store</Text>
-          <Text style={styles.centerText} >
-            Store your values securely.
-          </Text>
-        </View>
+    <View style={[{ flex: 1, backgroundColor: 'white' }, contentPlatformStyle]}>
+      <ScrollView
+        style={[styles.scrollView]}
+        contentContainerStyle={[styles.contentContainer]}>
+        <View style={styles.container}>
+          <View style={styles.titleContainer}>
+            <View style={styles.titleRow}>
+              <Text style={styles.title}>{translation('settingScreen.title')}</Text>
 
-        <View style={styles.sectionsWrapper}>
-          <View style={styles.container}>
-            <Text style={styles.paragraph}>Save an item</Text>
-
-            <TextInput
-              style={styles.textInput}
-              onChangeText={(val) => onChangeKey(val)}
-              placeholder="Enter the key"
-              value={key}
-              placeholderTextColor="#999999"
-            />
-            <TextInput
-              style={styles.textInput}
-              onChangeText={val => {
-                onChangeValue(val);
-              }}
-              placeholder="Enter the value"
-              value={value}
-              placeholderTextColor="#999999"
-            />
-
-            <View
-              style={{ marginTop: 8 }}>
-
-              <Button
-                title="Save this key/value pair"
-
+              <Pressable
                 onPress={() => {
-                  save(key, value);
-                  onChangeKey('');
-                  onChangeValue('');
+                  setIsModalOpen(true);
                 }}
-              />
+                style={({ pressed }) => [
+                  styles.checkboxBase,
+                  {
+                    width: 32,
+                    height: 32,
+                    borderColor: 'transparent',
+                    backgroundColor: 'transparent',
+                    opacity: pressed ? 0.8 : 1,
+                  }
+                ]}
+              >
+                <EllipsisVertical color="#939393" size={32} />
+              </Pressable>
             </View>
 
-            <Text style={styles.paragraph}>Enter your key</Text>
-            <TextInput
-              style={styles.textInput}
-              onSubmitEditing={event => {
-                getValueFor(event.nativeEvent.text);
-              }}
-              placeholderTextColor="#999999"
-              placeholder="Enter the key for the value you want to get"
-            />
+            <Text style={styles.centerText} >
+              {translation('settingScreen.subtitle')}
+            </Text>
+          </View>
+
+          <View style={styles.sectionsWrapper}>
+            <View style={styles.container}>
+              <Text style={styles.paragraph}>{translation('settingScreen.saveItmTitle')}</Text>
+
+              <TextInput
+                style={styles.textInput}
+                onChangeText={(val) => onChangeKey(val)}
+                placeholder={translation('settingScreen.enterKey')}
+                value={key}
+                placeholderTextColor="#999999"
+              />
+
+              <TextInput
+                style={styles.textInput}
+                onChangeText={val => {
+                  onChangeValue(val);
+                }}
+                placeholder={translation('settingScreen.enterValue')}
+                value={value}
+                placeholderTextColor="#999999"
+              />
+
+              <View style={{ marginTop: 8 }}>
+                <Button
+                  title={translation('settingScreen.saveBtnTxt')}
+
+                  onPress={() => {
+                    save(key, value);
+                    onChangeKey('');
+                    onChangeValue('');
+                  }}
+                />
+              </View>
+
+              <Text style={styles.paragraph}>{translation('settingScreen.retrieveTitle')}</Text>
+
+              <TextInput
+                style={styles.textInput}
+                onSubmitEditing={event => {
+                  getValueFor(event.nativeEvent.text);
+                }}
+                placeholderTextColor="#999999"
+                placeholder={translation('settingScreen.retrieveBtnTxt')}
+              />
+            </View>
           </View>
         </View>
 
-      </View>
-    </ScrollView>
+      </ScrollView>
+
+      <SettingsModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} onClose={() => { }} />
+    </View>
   );
 }
 
@@ -122,7 +153,6 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     gap: 12,
-    alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 24,
   },
@@ -131,7 +161,6 @@ const styles = StyleSheet.create({
     fontWeight: 700
   },
   centerText: {
-    textAlign: 'center',
     color: 'skyblue'
   },
   sectionsWrapper: {
@@ -154,5 +183,16 @@ const styles = StyleSheet.create({
     marginTop: 8,
     borderRadius: 4,
     color: 'black'
+  },
+  titleRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  checkboxBase: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
   },
 });
