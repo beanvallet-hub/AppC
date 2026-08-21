@@ -1,22 +1,10 @@
-import axios, { Axios } from 'axios';
+import axios from 'axios';
 
-let axiosPromise: Axios | null = null;
+import { API_URL } from '@env';
 
-export async function  getAxios() {
-    if (!axiosPromise) {
-        axiosPromise = await initializeAxios();
-    }
-
-    return axiosPromise;
-}
-
-async function initializeAxios() {
-    const backendApi = axios.create({
-        baseURL: process.env.API_URL,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-
-    return backendApi;
-}
+export const axiosIns = axios.create({
+    baseURL: API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});

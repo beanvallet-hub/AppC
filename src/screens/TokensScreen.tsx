@@ -5,22 +5,39 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { EllipsisVertical } from 'lucide-react-native';
 import { SettingsModal } from '../components/SettingsModal';
 import { useLanguage } from '../i18n/useLanguage';
+import Toast from 'react-native-toast-message';
 
 
 async function save(key: string, value: string) {
   await setSecureItem(key, value);
 
-  alert('Your value saved');
-
+  Toast.show({
+    type: "success",
+    text1: "Success",
+    text2: "Value saved",
+  });
 }
 
 async function getValueFor(key: string) {
   let result = await getSecureItem(key);
 
   if (result) {
-    alert("🔐 Here's your value 🔐 \n" + result);
+    Toast.show({
+      type: "success",
+      text1: "Your value: " + result,
+      text2: "Found",
+      position: 'bottom',
+      bottomOffset: 80,
+      autoHide: false,
+    });
   } else {
-    alert('No values stored under that key.');
+    Toast.show({
+      type: "error",
+      text1: "Not Found",
+      text2: "No values stored under that key",
+      position: 'bottom',
+      bottomOffset: 80
+    });
   }
 }
 
@@ -32,7 +49,7 @@ export default function TokensScreen() {
 
   const safeAreaInsets = useSafeAreaInsets();
   const { translation } = useLanguage();
-  
+
   const insets = {
     ...safeAreaInsets,
     bottom: safeAreaInsets.bottom + 130,

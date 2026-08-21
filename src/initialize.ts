@@ -1,4 +1,4 @@
-import { getAxios } from "./api/client";
+import "./api/client";
 import { getDatabase } from "./database/database";
 import { migrate } from "./database/migrations";
 import { loadSampleData } from "./database/sample-data";
@@ -20,6 +20,4 @@ async function initialize() {
   await migrate(db);
 
   await loadSampleData(db);
-
-  await getAxios();
 }

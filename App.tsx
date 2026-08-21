@@ -12,7 +12,7 @@ import { initializeApp } from './src/initialize';
 import TokensScreen from './src/screens/TokensScreen';
 import { useLanguage } from './src/i18n/useLanguage';
 import { NavigationContainer } from '@react-navigation/native';
-
+import Toast from 'react-native-toast-message';
 
 const Tab = createNativeBottomTabNavigator();
 
@@ -94,6 +94,8 @@ function AppContent() {
   return (
     <NavigationContainer>
       <TabNavigator />
+
+      <Toast />
     </NavigationContainer>
   );
 }

@@ -1,19 +1,20 @@
 import { Modal, Pressable, StyleSheet, TextInput, View, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../i18n/useLanguage';
+import { Task } from '../repositories/tasks';
 
 type InputModalProps = {
     isOpen: boolean;
-    initialValue: string;
+    initialValue: Task | null;
     setIsOpen: (value: boolean) => void;
-    onClose: () => void;
-    onSave: (newValue: string) => void;
+    onClose: (task: Task | null) => void;
+    onSave: (task: Task | null, newValue: string) => void;
 }
 
 
 export function InputModal({ isOpen, initialValue, setIsOpen, onClose, onSave }: InputModalProps) {
     const inputRef = useRef<TextInput>(null);
-    const [inpVal, setInpVal] = useState(initialValue);
+    const [inpVal, setInpVal] = useState(initialValue?.name || '');
 
     const { translation } = useLanguage();
 
@@ -22,7 +23,7 @@ export function InputModal({ isOpen, initialValue, setIsOpen, onClose, onSave }:
         setInpVal('');
 
         setIsOpen(false);
-        onClose();
+        onClose(initialValue);
     };
 
     const handleSave = () => {
@@ -30,11 +31,11 @@ export function InputModal({ isOpen, initialValue, setIsOpen, onClose, onSave }:
         inputRef.current?.blur();
         setInpVal('');
 
-        onSave(newValue);
+        onSave(initialValue, newValue);
     };
 
     useEffect(() => {
-        setInpVal(initialValue);
+        setInpVal(initialValue?.name || '');
     }, [initialValue]);
 
     return (

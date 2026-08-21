@@ -6,6 +6,7 @@ import { RoundedIconButton } from '../components/RoundedIconButton';
 import { SwipeableItem } from '../components/SwipeableItem';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLanguage } from '../i18n/useLanguage';
+import Toast from 'react-native-toast-message';
 
 
 export function TasksScreen() {
@@ -18,7 +19,15 @@ export function TasksScreen() {
   useEffect(() => {
     getTasks().then((tasks) => {
       setTasks(tasks);
-    });
+    }).catch((err) => {
+      Toast.show({
+        type: "error",
+        text1: "Something went wrong",
+        text2: "Failed to load tasks",
+        topOffset: 60
+      });
+    }
+    );
   }, []);
 
 
