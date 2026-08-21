@@ -152,7 +152,7 @@ export default function TokensScreen() {
 
       </ScrollView>
 
-      <SettingsModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} onClose={() => { }} />
+      <SettingsModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
     </View>
   );
 }

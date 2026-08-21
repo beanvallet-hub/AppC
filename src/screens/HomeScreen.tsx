@@ -83,9 +83,9 @@ export function HomeScreen() {
 
             return newTasks;
           });
-
-          setModalVisible(false);
         }
+
+        setModalVisible(false);
       })
         .catch((err) => {
           console.log('Error creating new task!');
@@ -162,7 +162,8 @@ export function HomeScreen() {
             renderItem={renderItem}
             getItemLayout={(_, index) => (
               { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
-            )} />
+            )}
+          />
         </View>
       </View>
 

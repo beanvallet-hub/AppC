@@ -1,6 +1,9 @@
 import { Modal, Pressable, StyleSheet, TextInput, View, Text } from 'react-native';
 import { useLanguage } from '../i18n/useLanguage';
 import { X } from 'lucide-react-native';
+import { SupportedLanguage } from '../i18n/config';
+import { updateAppLang } from '../repositories/application';
+import Toast from 'react-native-toast-message';
 
 type InputModalProps = {
     isOpen: boolean;
@@ -15,6 +18,23 @@ export function SettingsModal({ isOpen, setIsOpen, onClose }: InputModalProps) {
     const handleClose = () => {
         setIsOpen(false);
         if (onClose) onClose();
+    };
+
+    const changeLanguage = (lang: SupportedLanguage) => {
+        setLanguage(lang);
+
+        updateAppLang(lang)
+            .catch((err) => {
+                console.log('Failed to change language!', err);
+
+                Toast.show({
+                    type: "error",
+                    text1: "Something went wrong",
+                    text2: "Failed to change language",
+                    position: 'bottom',
+                    bottomOffset: 60
+                });
+            });
     };
 
     return (
@@ -53,21 +73,21 @@ export function SettingsModal({ isOpen, setIsOpen, onClose }: InputModalProps) {
                     <View>
 
                         <Text style={{ fontSize: 20, fontWeight: 600 }}>{translation('settings.language')}</Text>
-                        
+
                         <Text style={{ fontSize: 16 }}>current: {language}</Text>
 
 
                         <View style={styles.buttonView}>
                             <Pressable
                                 style={[styles.button, styles.buttonOpen]}
-                                onPress={() => setLanguage('en')}>
+                                onPress={() => changeLanguage('en')}>
 
                                 <Text style={styles.textStyle}>English</Text>
                             </Pressable>
 
                             <Pressable
                                 style={[styles.button, styles.buttonClose]}
-                                onPress={() => setLanguage('si')}>
+                                onPress={() => changeLanguage('si')}>
 
                                 <Text style={styles.textStyle}>සිංහල</Text>
                             </Pressable>

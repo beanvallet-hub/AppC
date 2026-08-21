@@ -6,7 +6,9 @@ import { si } from './locales/si';
 
 import {
   FALLBACK_LANGUAGE,
+  SUPPORTED_LANGUAGES
 } from './config';
+import { getApplication } from '../repositories/application';
 
 const resources = {
   en: {
@@ -24,26 +26,48 @@ const resources = {
 // const initialLanguage =
 //   bestLanguage?.languageTag ?? FALLBACK_LANGUAGE;
 
-const initialLanguage = 'si';
+const initialLanguage = 'en';
 
-i18n
-  .use(initReactI18next)
-  .init({
-    resources,
+export async function initializeI18n() {
+  let appData;
 
-    lng: initialLanguage,
+  try {
+    appData = await getApplication();
+  } catch (error) {
+    console.log('Error: Failed to read application record!');
+  }
 
-    fallbackLng: FALLBACK_LANGUAGE,
+  let storedLanguage;
 
-    interpolation: {
-      escapeValue: false,
-    },
-    
-    saveMissing: __DEV__, // true when running in development mode.
+  if (appData) {
+    storedLanguage = appData.preferences?.language ?? FALLBACK_LANGUAGE;
+  }
 
-    react: {
-      useSuspense: false,
-    },
-  });
+  const language =
+    storedLanguage &&
+      SUPPORTED_LANGUAGES.includes(storedLanguage as any)
+      ? storedLanguage
+      : initialLanguage;
+
+  await i18n
+    .use(initReactI18next)
+    .init({
+      resources,
+
+      lng: language,
+
+      fallbackLng: FALLBACK_LANGUAGE,
+
+      interpolation: {
+        escapeValue: false,
+      },
+
+      saveMissing: __DEV__, // true when running in development mode.
+
+      react: {
+        useSuspense: false,
+      },
+    });
+}
 
 export default i18n;

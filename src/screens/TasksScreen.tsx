@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { createTask, deleteTask, getTasks, Task, updateTask } from '../repositories/tasks';
 import { InputModal } from '../components/InputModal';
 import { RoundedIconButton } from '../components/RoundedIconButton';
@@ -7,6 +7,15 @@ import { SwipeableItem } from '../components/SwipeableItem';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLanguage } from '../i18n/useLanguage';
 import Toast from 'react-native-toast-message';
+
+
+const ITEM_HEIGHT = 60;
+
+const ListItem = memo(SwipeableItem,
+  (prevProps, nextProps) => {
+    return prevProps.item.name === nextProps.item.name;
+  },
+);
 
 
 export function TasksScreen() {
@@ -31,13 +40,27 @@ export function TasksScreen() {
   }, []);
 
 
-  const handleSave = (newValue: string) => {
+  const handleSave = (activeTask: Task | null, newValue: string) => {
     if (activeTask) {
-      activeTask.name = newValue;
-
-      updateTask({
+      const newTask = {
         ...activeTask,
         name: newValue,
+      };
+
+      updateTask(newTask).catch((err) => {
+        console.log('Error creating new task!');
+      });
+
+      setTasks((tasks) => {
+        const newTasks = tasks.map((task) => {
+          if (task.id === activeTask.id) {
+            return newTask;
+          } else {
+            return task;
+          }
+        });
+
+        return newTasks;
       });
 
       setActiveTask(null);
@@ -48,19 +71,26 @@ export function TasksScreen() {
         isCompleted: false,
         isFavorite: false,
       }).then((task) => {
-        setTasks((tasks) => {
-          const newTasks = [...tasks];
-          newTasks.push(task);
 
-          return newTasks;
-        });
-      }).finally(() => {
+        if (task) {
+          setTasks((tasks) => {
+            const newTasks = [...tasks];
+            newTasks.push(task);
+
+            return newTasks;
+          });
+        }
+
         setModalVisible(false);
-      });
+      })
+        .catch((err) => {
+          console.log('Error creating new task!');
+          setModalVisible(false);
+        });
     }
   }
 
-  const handleClose = () => {
+  const handleClose = (activeTask: Task | null) => {
     if (activeTask) {
       setActiveTask(null);
     }
@@ -72,12 +102,31 @@ export function TasksScreen() {
     setTasks((currTasks) => {
       return currTasks.filter((item) => item.id !== task.id);
     });
+
+    Toast.show({
+      type: "info",
+      text1: "Deleted",
+      text2: "Task Deleted",
+      position: 'bottom',
+      bottomOffset: 60
+    });
   };
 
   const handleLongPress = (task: any) => {
     setActiveTask(task);
     setModalVisible(true);
   };
+
+
+  const renderItem = useCallback(({ item }: any) => (
+    <ListItem
+      key={item.id}
+      item={item}
+      onDelete={handleDelete}
+      onLongPress={handleLongPress}
+      onUpdate={updateTask}
+    />
+  ), []);
 
   return (
     <SafeAreaView
@@ -101,18 +150,17 @@ export function TasksScreen() {
         </View>
 
         <View style={styles.sectionsWrapper}>
-          <FlatList data={tasks} renderItem={({ item }) =>
-            <SwipeableItem
-              item={item}
-              onDelete={handleDelete}
-              onLongPress={handleLongPress}
-              onUpdate={updateTask}
-            />}
+          <FlatList
+            data={tasks}
+            renderItem={renderItem}
+            getItemLayout={(_, index) => (
+              { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
+            )}
           />
         </View>
       </View>
 
-      <InputModal isOpen={modalVisible} onSave={handleSave} onClose={handleClose} initialValue={activeTask?.name || ''} setIsOpen={setModalVisible} />
+      <InputModal isOpen={modalVisible} onSave={handleSave} onClose={handleClose} initialValue={activeTask} setIsOpen={setModalVisible} />
     </SafeAreaView>
   );
 }

@@ -6,19 +6,20 @@ export async function migrate(db: NitroSQLiteConnection) {
   //   PRAGMA journal_mode = WAL;
   // `);
 
-  // await db.execAsync(`
-  //   DROP TABLE application;
+  // await db.executeAsync(`
+  //   DROP TABLE IF EXISTS application;
   // `);
 
-  // await db.execAsync(`
-  //   DROP TABLE tasks;
+  // await db.executeAsync(`
+  //   DROP TABLE IF EXISTS tasks;
   // `);
 
   await db.executeAsync(`
     CREATE TABLE IF NOT EXISTS application (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
-      is_init_data_loaded BOOLEAN DEFAULT 0
+      is_init_data_loaded BOOLEAN DEFAULT 0,
+      preferences TEXT
     );
   `);
 
