@@ -1,6 +1,5 @@
-import { Modal, Pressable, StyleSheet, TextInput, View, Text } from 'react-native';
+import { Modal, Pressable, StyleSheet, View, Text, Image } from 'react-native';
 import { useLanguage } from '../i18n/useLanguage';
-import { X } from 'lucide-react-native';
 import { SupportedLanguage } from '../i18n/config';
 import { updateAppLang } from '../repositories/application';
 import Toast from 'react-native-toast-message';
@@ -65,7 +64,7 @@ export function SettingsModal({ isOpen, setIsOpen, onClose }: InputModalProps) {
                                     }
                                 ]}
                             >
-                                <X color="#939393" size={28} />
+                                <Image source={require('../../assets/icons/x.png')} style={{ width: 28, height: 28, tintColor: '#939393' }} />
                             </Pressable>
                         </View>
                     </View>

@@ -35,6 +35,7 @@ export async function initializeI18n() {
     appData = await getApplication();
   } catch (error) {
     console.log('Error: Failed to read application record!');
+    console.error(error);
   }
 
   let storedLanguage;

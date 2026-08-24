@@ -30,6 +30,7 @@ export function HomeScreen() {
       if (res.data) {
         setTasks(res.data);
       }
+      
     }).catch((err) => {
       console.log('Error loading tasks!');
 

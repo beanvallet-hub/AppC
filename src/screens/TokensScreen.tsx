@@ -1,20 +1,28 @@
-import { Button, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Button,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { useState } from 'react';
 import { getSecureItem, setSecureItem } from '../utils/keychain';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { EllipsisVertical } from 'lucide-react-native';
 import { SettingsModal } from '../components/SettingsModal';
 import { useLanguage } from '../i18n/useLanguage';
 import Toast from 'react-native-toast-message';
-
+import Svg, { Circle } from 'react-native-svg';
 
 async function save(key: string, value: string) {
   await setSecureItem(key, value);
 
   Toast.show({
-    type: "success",
-    text1: "Success",
-    text2: "Value saved",
+    type: 'success',
+    text1: 'Success',
+    text2: 'Value saved',
   });
 }
 
@@ -23,24 +31,23 @@ async function getValueFor(key: string) {
 
   if (result) {
     Toast.show({
-      type: "success",
-      text1: "Your value: " + result,
-      text2: "Found",
+      type: 'success',
+      text1: 'Your value: ' + result,
+      text2: 'Found',
       position: 'bottom',
       bottomOffset: 80,
       autoHide: false,
     });
   } else {
     Toast.show({
-      type: "error",
-      text1: "Not Found",
-      text2: "No values stored under that key",
+      type: 'error',
+      text1: 'Not Found',
+      text2: 'No values stored under that key',
       position: 'bottom',
-      bottomOffset: 80
+      bottomOffset: 80,
     });
   }
 }
-
 
 export default function TokensScreen() {
   const [key, onChangeKey] = useState('');
@@ -72,11 +79,14 @@ export default function TokensScreen() {
     <View style={[{ flex: 1, backgroundColor: 'white' }, contentPlatformStyle]}>
       <ScrollView
         style={[styles.scrollView]}
-        contentContainerStyle={[styles.contentContainer]}>
+        contentContainerStyle={[styles.contentContainer]}
+      >
         <View style={styles.container}>
           <View style={styles.titleContainer}>
             <View style={styles.titleRow}>
-              <Text style={styles.title}>{translation('settingScreen.title')}</Text>
+              <Text style={styles.title}>
+                {translation('settingScreen.title')}
+              </Text>
 
               <Pressable
                 onPress={() => {
@@ -90,25 +100,43 @@ export default function TokensScreen() {
                     borderColor: 'transparent',
                     backgroundColor: 'transparent',
                     opacity: pressed ? 0.8 : 1,
-                  }
+                  },
                 ]}
               >
-                <EllipsisVertical color="#939393" size={32} />
+                {/* <EllipsisVertical color="#939393" size={32} /> */}
+
+                <Svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="#939393"
+                  stroke="#939393"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <Circle cx="12" cy="12" r="2" />
+                  <Circle cx="12" cy="5" r="2" />
+                  <Circle cx="12" cy="19" r="2" />
+                </Svg>
               </Pressable>
             </View>
 
-            <Text style={styles.centerText} >
+            <Text style={styles.centerText}>
               {translation('settingScreen.subtitle')}
             </Text>
           </View>
 
           <View style={styles.sectionsWrapper}>
             <View style={styles.container}>
-              <Text style={styles.paragraph}>{translation('settingScreen.saveItmTitle')}</Text>
+              <Text style={styles.paragraph}>
+                {translation('settingScreen.saveItmTitle')}
+              </Text>
 
               <TextInput
                 style={styles.textInput}
-                onChangeText={(val) => onChangeKey(val)}
+                onChangeText={val => onChangeKey(val)}
                 placeholder={translation('settingScreen.enterKey')}
                 value={key}
                 placeholderTextColor="#999999"
@@ -127,7 +155,6 @@ export default function TokensScreen() {
               <View style={{ marginTop: 8 }}>
                 <Button
                   title={translation('settingScreen.saveBtnTxt')}
-
                   onPress={() => {
                     save(key, value);
                     onChangeKey('');
@@ -136,7 +163,9 @@ export default function TokensScreen() {
                 />
               </View>
 
-              <Text style={styles.paragraph}>{translation('settingScreen.retrieveTitle')}</Text>
+              <Text style={styles.paragraph}>
+                {translation('settingScreen.retrieveTitle')}
+              </Text>
 
               <TextInput
                 style={styles.textInput}
@@ -149,7 +178,6 @@ export default function TokensScreen() {
             </View>
           </View>
         </View>
-
       </ScrollView>
 
       <SettingsModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
@@ -175,10 +203,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 700
+    fontWeight: 700,
   },
   centerText: {
-    color: 'skyblue'
+    color: 'skyblue',
   },
   sectionsWrapper: {
     gap: 20,
@@ -199,7 +227,7 @@ const styles = StyleSheet.create({
     padding: 4,
     marginTop: 8,
     borderRadius: 4,
-    color: 'black'
+    color: 'black',
   },
   titleRow: {
     display: 'flex',
