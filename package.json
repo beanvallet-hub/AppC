@@ -7,7 +7,13 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "android:dev": "node scripts/start.js android development",
+    "android:test": "node scripts/start.js android testing",
+    "android:prod": "node scripts/start.js android production",
+    "ios:dev": "node scripts/start.js ios development",
+    "ios:test": "node scripts/start.js ios testing",
+    "ios:prod": "node scripts/start.js ios production"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^7.18.16",

@@ -27,3 +27,9 @@ On a seperate terminal
 ```sh
 npm run android
 ```
+
+
+### reset Metro/babel cache
+```
+npx react-native start --reset-cache
+```
