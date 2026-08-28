@@ -1,4 +1,4 @@
-import { NitroSQLiteConnection, open } from 'react-native-nitro-sqlite';
+import { NitroSQLiteConnection } from 'react-native-nitro-sqlite';
 
 
 export async function migrate(db: NitroSQLiteConnection) {
@@ -28,7 +28,8 @@ export async function migrate(db: NitroSQLiteConnection) {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       is_completed BOOLEAN DEFAULT 0,
-      is_favorite BOOLEAN DEFAULT 0
+      is_favorite BOOLEAN DEFAULT 0,
+      remind_at TEXT
     );
   `);
 }

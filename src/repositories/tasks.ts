@@ -6,13 +6,20 @@ export type Task = {
     name: string;
     isCompleted: boolean;
     isFavorite: boolean;
+    remindAt?: string;
+};
+
+export type CreateTaskDto = {
+    name: string;
+    isCompleted: boolean;
+    isFavorite: boolean;
+    remindAt?: string;
 };
 
 const booleanColumns = new Set(['is_completed', 'is_favorite']);
 
 
-export async function getTasks(
-): Promise<Task[]> {
+export async function getTasks(): Promise<Task[]> {
     const db = getDatabase();
 
     const { results } = await db.executeAsync<Task>(
@@ -24,14 +31,13 @@ export async function getTasks(
 
 
 
-export async function createTask(taskData: { name: string, isCompleted: boolean, isFavorite: boolean }
-): Promise<Task> {
+export async function createTask(taskData: CreateTaskDto): Promise<Task> {
     try {
         const db = getDatabase();
 
         const { insertId  } = await db.executeAsync(
-            'INSERT INTO tasks (name, is_completed, is_favorite) VALUES (?, ?, ?)',
-            [taskData.name, taskData.isCompleted, taskData.isFavorite]
+            'INSERT INTO tasks (name, is_completed, is_favorite, remind_at) VALUES (?, ?, ?, ?)',
+            [taskData.name, taskData.isCompleted, taskData.isFavorite, (taskData.remindAt ?? null)]
         );
 
         if (insertId) {
@@ -66,13 +72,17 @@ export async function updateTask(taskData: Task) {
             `UPDATE tasks
                 SET name = ?,
                     is_completed = ?,
-                    is_favorite = ?
+                    is_favorite = ?,
+                    remind_at = ?
                 WHERE id = ?;`,
             [taskData.name,
             taskData.isCompleted,
             taskData.isFavorite,
+            (taskData.remindAt ?? null),
             taskData.id]
         );
+
+        return taskData;
     } catch (error) {
         console.log('Task update failed!');
 

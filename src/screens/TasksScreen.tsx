@@ -13,11 +13,19 @@ import { SwipeableItem } from '../components/SwipeableItem';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLanguage } from '../i18n/useLanguage';
 import Toast from 'react-native-toast-message';
+import {
+  createReminder,
+  deleteReminder,
+  updateReminder,
+} from '../services/reminderService';
 
 const ITEM_HEIGHT = 60;
 
 const ListItem = memo(SwipeableItem, (prevProps, nextProps) => {
-  return prevProps.item.name === nextProps.item.name;
+  return (
+    prevProps.item.name === nextProps.item.name &&
+    prevProps.item.remindAt === nextProps.item.remindAt
+  );
 });
 
 export function TasksScreen() {
@@ -44,17 +52,34 @@ export function TasksScreen() {
       });
   }, []);
 
-  const handleSave = (activeTask: Task | null, newValue: string) => {
+  const handleSave = (
+    activeTask: Task | null,
+    newValues: Record<string, any>,
+  ) => {
     if (activeTask) {
       const newTask = {
         ...activeTask,
-        name: newValue,
+        name: newValues.name,
+        remindAt: newValues.date,
       };
 
-      updateTask(newTask).catch(err => {
-        console.log('Error creating new task!');
-        console.error('Error :>> ', err);
-      });
+      updateTask(newTask)
+        .then(task => {
+          if (task.remindAt && activeTask.remindAt !== newValues.date) {
+            updateReminder({
+              id: `${task.id}`,
+              title: 'Task Reminder',
+              body: task.name,
+              date: new Date(task.remindAt),
+            });
+          }
+
+          return task;
+        })
+        .catch(err => {
+          console.log('Error: Failed update task!');
+          console.error('Error :>> ', err);
+        });
 
       setTasks(tasks => {
         const newTasks = tasks.map(task => {
@@ -71,11 +96,26 @@ export function TasksScreen() {
       setActiveTask(null);
       setModalVisible(false);
     } else {
-      createTask({
-        name: newValue,
+      const taskData = {
+        name: newValues.name,
         isCompleted: false,
         isFavorite: false,
-      })
+        remindAt: newValues.date,
+      };
+
+      createTask(taskData)
+        .then(task => {
+          if (task.remindAt) {
+            createReminder({
+              id: `${task.id}`,
+              title: 'Task Reminder',
+              body: task.name,
+              date: new Date(task.remindAt),
+            });
+          }
+
+          return task;
+        })
         .then(task => {
           if (task) {
             setTasks(tasks => {
@@ -104,7 +144,15 @@ export function TasksScreen() {
   };
 
   const handleDelete = (task: any) => {
-    deleteTask(task);
+    deleteTask(task).catch(err => {
+      console.log('Error: Failed to delete task!');
+      console.error('Error :>> ', err);
+    });
+
+    deleteReminder(task.id).catch(err => {
+      console.log('Error: Failed to delete reminder!');
+      console.error('Error :>> ', err);
+    });
 
     setTasks(currTasks => {
       return currTasks.filter(item => item.id !== task.id);
