@@ -1,7 +1,7 @@
 import { Modal, Pressable, StyleSheet, View, Text, Image } from 'react-native';
 import { useLanguage } from '../i18n/useLanguage';
 import { SupportedLanguage } from '../i18n/config';
-import { updateAppLang } from '../repositories/application';
+import { updateAppLang } from '../repositories/applicationRepository';
 import Toast from 'react-native-toast-message';
 
 type InputModalProps = {

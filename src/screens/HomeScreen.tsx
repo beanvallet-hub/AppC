@@ -1,21 +1,29 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { memo, useCallback, useEffect, useState } from 'react';
-import { createTask, deleteTask, getTasks, Task, updateTask } from '../api/task.api';
+import {
+  createTask,
+  deleteTask,
+  getTasks,
+  Task,
+  updateTask,
+} from '../api/task.api';
 import { InputModal } from '../components/InputModal';
 import { RoundedIconButton } from '../components/RoundedIconButton';
 import { SwipeableItem } from '../components/SwipeableItem';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLanguage } from '../i18n/useLanguage';
 import Toast from 'react-native-toast-message';
+import {
+  createReminder,
+  deleteReminder,
+  updateReminder,
+} from '../services/reminderService';
 
 const ITEM_HEIGHT = 60;
 
-const ListItem = memo(SwipeableItem,
-  (prevProps, nextProps) => {
-    return prevProps.item.name === nextProps.item.name;
-  },
-);
-
+const ListItem = memo(SwipeableItem, (prevProps, nextProps) => {
+  return prevProps.item.name === nextProps.item.name;
+});
 
 export function HomeScreen() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -25,39 +33,52 @@ export function HomeScreen() {
   const { translation } = useLanguage();
 
   useEffect(() => {
-    getTasks().then((res) => {
+    getTasks()
+      .then(res => {
+        if (res.data) {
+          setTasks(res.data);
+        }
+      })
+      .catch(err => {
+        console.log('Error loading tasks!');
 
-      if (res.data) {
-        setTasks(res.data);
-      }
-      
-    }).catch((err) => {
-      console.log('Error loading tasks!');
-
-      Toast.show({
-        type: "error",
-        text1: "Something went wrong",
-        text2: "Failed to load tasks",
-        position: 'bottom',
-        bottomOffset: 60
+        Toast.show({
+          type: 'error',
+          text1: 'Something went wrong',
+          text2: 'Failed to load tasks',
+          position: 'bottom',
+          bottomOffset: 60,
+        });
       });
-    });
   }, []);
 
-
-  const handleSave = (activeTask: Task | null, newValue: string) => {
+  const handleSave = (
+    activeTask: Task | null,
+    newValues: Record<string, any>,
+  ) => {
     if (activeTask) {
       const newTask = {
         ...activeTask,
-        name: newValue,
+        name: newValues.name,
+        remindAt: newValues.date,
       };
 
-      updateTask(newTask).catch((err) => {
-        console.log('Error creating new task!');
+      updateTask(newTask).catch(err => {
+        console.log('Error: Failed update task!');
+        console.error('Error :>> ', err);
       });
 
-      setTasks((tasks) => {
-        const newTasks = tasks.map((task) => {
+      if (newValues.date && activeTask.remindAt !== newValues.date) {
+        updateReminder({
+          id: `${newTask.id}`,
+          title: 'Task Reminder',
+          body: newTask.name,
+          date: new Date(newTask.remindAt),
+        });
+      }
+
+      setTasks(tasks => {
+        const newTasks = tasks.map(task => {
           if (task.id === activeTask.id) {
             return newTask;
           } else {
@@ -71,52 +92,76 @@ export function HomeScreen() {
       setActiveTask(null);
       setModalVisible(false);
     } else {
-      createTask({
-        name: newValue,
+      const taskData = {
+        name: newValues.name,
         isCompleted: false,
         isFavorite: false,
-      }).then((res) => {
+        remindAt: newValues.date,
+      };
 
-        if (res.data) {
-          setTasks((tasks) => {
-            const newTasks = [...tasks];
-            newTasks.push(res.data);
+      createTask(taskData)
+        .then(res => {
+          if (res && res.data.remindAt) {
+            const task = res.data;
 
-            return newTasks;
-          });
-        }
+            createReminder({
+              id: `${task.id}`,
+              title: 'Task Reminder',
+              body: task.name,
+              date: new Date(task.remindAt || ''),
+            });
 
-        setModalVisible(false);
-      })
-        .catch((err) => {
+            return task;
+          }
+        })
+        .then(task => {
+          if (task) {
+            setTasks(tasks => {
+              const newTasks = [...tasks];
+              newTasks.push(task);
+
+              return newTasks;
+            });
+          }
+
+          setModalVisible(false);
+        })
+        .catch(err => {
           console.log('Error creating new task!');
           setModalVisible(false);
+
+          console.error('Error :>> ', err);
         });
     }
-  }
+  };
 
   const handleClose = (activeTask: Task | null) => {
     if (activeTask) {
       setActiveTask(null);
     }
-  }
+  };
 
   const handleDelete = (task: any) => {
-    deleteTask(task)
-      .catch((err) => {
-        console.log('Error deleting task!');
-      });
+    deleteTask(task).catch(err => {
+      console.log('Error: Failed to delete task!');
+      console.error('Error :>> ', err);
+    });
 
-    setTasks((currTasks) => {
-      return currTasks.filter((item) => item.id !== task.id);
+    deleteReminder(task.id).catch(err => {
+      console.log('Error: Failed to delete reminder!');
+      console.error('Error :>> ', err);
+    });
+
+    setTasks(currTasks => {
+      return currTasks.filter(item => item.id !== task.id);
     });
 
     Toast.show({
-      type: "info",
-      text1: "Deleted",
-      text2: "Task Deleted",
+      type: 'info',
+      text1: 'Deleted',
+      text2: 'Task Deleted',
       position: 'bottom',
-      bottomOffset: 60
+      bottomOffset: 60,
     });
   };
 
@@ -125,50 +170,61 @@ export function HomeScreen() {
     setModalVisible(true);
   };
 
-
-  const renderItem = useCallback(({ item }: any) => (
-    <ListItem
-      key={item.id}
-      item={item}
-      onDelete={handleDelete}
-      onLongPress={handleLongPress}
-      onUpdate={updateTask}
-    />
-  ), []);
+  const renderItem = useCallback(
+    ({ item }: any) => (
+      <ListItem
+        key={item.id}
+        item={item}
+        onDelete={handleDelete}
+        onLongPress={handleLongPress}
+        onUpdate={updateTask}
+      />
+    ),
+    [],
+  );
 
   return (
-    <SafeAreaView
-      style={[styles.scrollView, { backgroundColor: 'white' }]}
-    >
+    <SafeAreaView style={[styles.scrollView, { backgroundColor: 'white' }]}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <View style={styles.titleRow}>
             <View style={{ flexGrow: 1 }}>
-              <Text style={{ fontSize: 24, fontWeight: 700 }}>{translation('navigation.home')}</Text>
+              <Text style={{ fontSize: 24, fontWeight: 700 }}>
+                {translation('navigation.home')}
+              </Text>
             </View>
 
-            <RoundedIconButton size={48} onPress={() => {
-              setModalVisible(true);
-            }} />
+            <RoundedIconButton
+              size={48}
+              onPress={() => {
+                setModalVisible(true);
+              }}
+            />
           </View>
 
-          <Text style={styles.centerText}>
-            {translation('home.subtitle')}
-          </Text>
+          <Text style={styles.centerText}>{translation('home.subtitle')}</Text>
         </View>
 
         <View style={styles.sectionsWrapper}>
           <FlatList
             data={tasks}
             renderItem={renderItem}
-            getItemLayout={(_, index) => (
-              { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
-            )}
+            getItemLayout={(_, index) => ({
+              length: ITEM_HEIGHT,
+              offset: ITEM_HEIGHT * index,
+              index,
+            })}
           />
         </View>
       </View>
 
-      <InputModal isOpen={modalVisible} onSave={handleSave} onClose={handleClose} initialValue={activeTask} setIsOpen={setModalVisible} />
+      <InputModal
+        isOpen={modalVisible}
+        onSave={handleSave}
+        onClose={handleClose}
+        initialValue={activeTask}
+        setIsOpen={setModalVisible}
+      />
     </SafeAreaView>
   );
 }
@@ -190,12 +246,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 24,
     paddingBottom: 12,
-
   },
   centerText: {
     textAlign: 'center',
     color: 'skyblue',
-    paddingLeft: 4
+    paddingLeft: 4,
   },
   sectionsWrapper: {
     gap: 20,
@@ -204,7 +259,7 @@ const styles = StyleSheet.create({
     paddingBottom: 130,
     flex: 1,
     borderBottomWidth: 1,
-    borderBottomColor: '#e1e1e1'
+    borderBottomColor: '#e1e1e1',
   },
   titleRow: {
     display: 'flex',

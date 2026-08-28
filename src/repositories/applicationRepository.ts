@@ -1,6 +1,6 @@
 import { getDatabase } from '../database/database';
 import { SupportedLanguage } from '../i18n/config';
-import { rowsToJsRecords } from '../utils/utils';
+import { dbRecToJsObj } from '../utils/utils';
 
 
 export type Application = {
@@ -22,14 +22,14 @@ const booleanColumns = new Set(['is_init_data_loaded']);
 export async function getApplication(): Promise<ApplicationJs | null> {
     const db = getDatabase();
 
-    const { results } = await db.executeAsync<Application>(
+    const result = await db.execute(
         'SELECT * FROM application where id = 1'
     );
 
-    if (results.length > 0) {
-        let record = rowsToJsRecords<Application>(results, booleanColumns)[0];
+    if (result.rows.length > 0) {
+        let record: Application = dbRecToJsObj(result.rows[0], booleanColumns) as Application;
 
-        const recordJs = { ...record, preferences: JSON.parse(record.preferences) };
+        const recordJs = { ...record, preferences: JSON.parse(record.preferences)};
 
         return recordJs;
     }
@@ -43,7 +43,7 @@ export async function updateAppLang(newLang: SupportedLanguage) {
     try {
         const db = getDatabase();
 
-        await db.executeAsync(
+        await db.execute(
             `UPDATE application
              SET preferences = json_set(
                  preferences,

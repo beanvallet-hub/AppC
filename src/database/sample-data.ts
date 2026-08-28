@@ -1,4 +1,5 @@
-import { NitroSQLiteConnection } from 'react-native-nitro-sqlite';
+import { type DB } from '@op-engineering/op-sqlite';
+
 
 const tasks = [
     { id: 1, name: 'task 1', isCompleted: false, isFavorite: false, remindAt: null },
@@ -22,7 +23,7 @@ const tasks = [
 ];
 
 
-export async function loadSampleData(db: NitroSQLiteConnection) {
+export async function loadSampleData(db: DB) {
     // await db.executeAsync(
     //     'DELETE FROM application'
     // );
@@ -31,20 +32,20 @@ export async function loadSampleData(db: NitroSQLiteConnection) {
     //     'DELETE FROM tasks'
     // );
 
-    const { results } = await db.executeAsync(
+    const result = await db.execute(
         'SELECT * FROM application limit 1'
     );
 
-    const hasAppRec = results.length > 0;
-    const dataLoaded = hasAppRec && (results[0])?.is_init_data_loaded;
+    const hasAppRec = result.rows.length > 0;
+    const dataLoaded = hasAppRec && (result.rows[0])?.is_init_data_loaded;
 
     if (!dataLoaded) {
-        await db.executeAsync(
+        await db.execute(
             `DELETE FROM tasks;
              UPDATE sqlite_sequence SET seq = 0 WHERE name = 'tasks';`,
         );
 
-        await db.executeAsync(
+        await db.execute(
             'INSERT OR IGNORE INTO application (id, name, is_init_data_loaded, preferences) VALUES (?, ?, ?, ?)',
             [1, 'AppA', 0, '{"language":"en","theme":"light"}']
         );
@@ -52,10 +53,10 @@ export async function loadSampleData(db: NitroSQLiteConnection) {
         const statement = 'INSERT INTO tasks (id, name, is_completed, is_favorite, remind_at) VALUES (?, ?, ?, ?, ?)';
 
         for (const task of tasks) {
-            await db.executeAsync(statement, [task.id, task.name, task.isCompleted, task.isFavorite, task.remindAt]);
+            await db.execute(statement, [task.id, task.name, task.isCompleted, task.isFavorite, task.remindAt]);
         }
         
-        await db.executeAsync(`
+        await db.execute(`
             UPDATE application
             SET is_init_data_loaded = ?
             WHERE id = ?

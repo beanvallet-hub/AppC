@@ -8,7 +8,7 @@ import {
   FALLBACK_LANGUAGE,
   SUPPORTED_LANGUAGES
 } from './config';
-import { getApplication } from '../repositories/application';
+import { getApplication } from '../repositories/applicationRepository';
 
 const resources = {
   en: {

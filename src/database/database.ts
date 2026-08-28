@@ -1,6 +1,6 @@
-import { NitroSQLiteConnection, open } from 'react-native-nitro-sqlite';
+import { open, type DB } from '@op-engineering/op-sqlite';
 
-let dbPromise: NitroSQLiteConnection | null = null;
+let dbPromise: DB | null = null;
 
 export function getDatabase() {
   if (!dbPromise) {

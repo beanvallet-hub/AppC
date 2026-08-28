@@ -6,7 +6,7 @@ import {
   getTasks,
   Task,
   updateTask,
-} from '../repositories/tasks';
+} from '../repositories/taskRepository';
 import { InputModal } from '../components/InputModal';
 import { RoundedIconButton } from '../components/RoundedIconButton';
 import { SwipeableItem } from '../components/SwipeableItem';

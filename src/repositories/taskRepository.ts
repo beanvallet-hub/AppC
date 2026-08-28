@@ -18,15 +18,38 @@ export type CreateTaskDto = {
 
 const booleanColumns = new Set(['is_completed', 'is_favorite']);
 
+export async function getTaskById(
+  id: number,
+): Promise<Task | null> {
+  const db = getDatabase();
+
+  const result = await db.execute(
+    `
+      SELECT
+        *
+      FROM tasks
+      WHERE id = ?
+      LIMIT 1
+    `,
+    [id],
+  );
+
+  if (result.rows.length < 1) {
+    return null;
+  }
+
+  return result.rows[0] as Task;
+}
+
 
 export async function getTasks(): Promise<Task[]> {
     const db = getDatabase();
 
-    const { results } = await db.executeAsync<Task>(
+    const result = await db.execute(
         'SELECT * FROM tasks'
     );
 
-    return rowsToJsRecords<Task>(results as any, booleanColumns);
+    return rowsToJsRecords<Task>(result.rows as any, booleanColumns);
 }
 
 
@@ -35,22 +58,22 @@ export async function createTask(taskData: CreateTaskDto): Promise<Task> {
     try {
         const db = getDatabase();
 
-        const { insertId  } = await db.executeAsync(
+        const result = await db.execute(
             'INSERT INTO tasks (name, is_completed, is_favorite, remind_at) VALUES (?, ?, ?, ?)',
             [taskData.name, taskData.isCompleted, taskData.isFavorite, (taskData.remindAt ?? null)]
         );
 
-        if (insertId) {
-            const { results } = await db.executeAsync(
+        if (result.insertId) {
+            const findResult = await db.execute(
                 `
                 SELECT *
                 FROM tasks
                 WHERE id = ?
             `,
-                [insertId]
+                [result.insertId]
             );
 
-            return dbRecToJsObj(results[0], booleanColumns) as Task;
+            return dbRecToJsObj(findResult.rows[0], booleanColumns) as Task;
         }
         else {
             throw new Error('Insert failed');
@@ -68,7 +91,7 @@ export async function updateTask(taskData: Task) {
     try {
         const db = getDatabase();
 
-        await db.executeAsync(
+        await db.execute(
             `UPDATE tasks
                 SET name = ?,
                     is_completed = ?,
@@ -101,7 +124,7 @@ export async function deleteTask(taskData: {
     try {
         const db = getDatabase();
 
-        await db.executeAsync(
+        await db.execute(
             'DELETE FROM tasks WHERE id = ?',
             [taskData.id]
         );
@@ -116,11 +139,11 @@ export async function testDb(
 ) {
     const db = getDatabase();
 
-    const tasks = await db.executeAsync(
+    const tasks = await db.execute(
         'SELECT 1'
     );
 
-    const i = tasks.rows.item(0);
+    const i = tasks.rows[0];
 
     return i;
 }
