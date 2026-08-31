@@ -18,7 +18,7 @@ export function TaskRect({ task, onUpdate, onLongPress }: TaskRectProps) {
                 <RoundedCheckbox
                     size={24}
                     activeColor='#4560ee'
-                    initialValue={task.isCompleted ?? false}
+                    checked={task.isCompleted ?? false}
                     onValueChange={(newVal) => {
                         task.isCompleted = newVal;
 
@@ -26,7 +26,7 @@ export function TaskRect({ task, onUpdate, onLongPress }: TaskRectProps) {
                     }}
                 />
 
-                <Pressable onLongPress={() => {
+                <Pressable style={{ flex: 1 }} onPress={() => {
                     if (onLongPress) {
                         onLongPress(task);
                     }
@@ -38,7 +38,7 @@ export function TaskRect({ task, onUpdate, onLongPress }: TaskRectProps) {
             <StarCheckbox
                 size={24}
                 activeColor='#4560ee'
-                initialValue={task.isFavorite ?? false}
+                checked={task.isFavorite ?? false}
                 onValueChange={(newVal) => {
                     task.isFavorite = newVal;
 
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: 10,
         paddingBottom: 10,
+        paddingRight: 10
     },
     taskName: {
         paddingLeft: 16,

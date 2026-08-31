@@ -3,6 +3,7 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import {
   createTask,
   deleteTask,
+  getTaskById,
   getTasks,
   Task,
   updateTask,
@@ -18,20 +19,20 @@ import {
   deleteReminder,
   updateReminder,
 } from '../services/reminderService';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ITEM_HEIGHT = 60;
 
 const ListItem = memo(SwipeableItem, (prevProps, nextProps) => {
-  return (
-    prevProps.item.name === nextProps.item.name &&
-    prevProps.item.remindAt === nextProps.item.remindAt
-  );
+  return prevProps.item === nextProps.item;
 });
 
-export function TasksScreen() {
+export function TasksScreen({ navigation }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  const [refreshOnFocus, setRefreshOnFoucs] = useState(false);
 
   const { translation } = useLanguage();
 
@@ -51,6 +52,37 @@ export function TasksScreen() {
         console.error('Error :>> ', err);
       });
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      if (refreshOnFocus && activeTask) {
+        
+        getTaskById(activeTask.id)
+          .then(updatedTask => {
+
+            if (updatedTask && isActive) {
+              setTasks(current =>
+                current.map(task =>
+                  task.id === updatedTask.id ? updatedTask : task,
+                ),
+              );
+            }
+          })
+          .catch(err => {
+            console.error('Error loading  updated task!', err);
+          });
+
+        setActiveTask(null);
+        setRefreshOnFoucs(false);
+      }
+
+      return () => {
+        isActive = false;
+      };
+    }, [refreshOnFocus, activeTask]),
+  );
 
   const handleSave = (
     activeTask: Task | null,
@@ -169,7 +201,11 @@ export function TasksScreen() {
 
   const handleLongPress = (task: any) => {
     setActiveTask(task);
-    setModalVisible(true);
+    setRefreshOnFoucs(true);
+
+    navigation.navigate('Task', {
+      task,
+    });
   };
 
   const renderItem = useCallback(

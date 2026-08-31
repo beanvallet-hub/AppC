@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
@@ -7,6 +7,7 @@ type StarCheckbox = PropsWithChildren & {
   onValueChange?: (newValue: boolean) => void;
   size?: number;
   activeColor?: string;
+  checked?: boolean;
 };
 
 const StarCheckbox = ({
@@ -14,8 +15,9 @@ const StarCheckbox = ({
   onValueChange,
   size = 28,
   activeColor = '#007AFF',
+  checked,
 }: StarCheckbox) => {
-  const [isChecked, setIsChecked] = useState(initialValue);
+  const [isChecked, setIsChecked] = useState(checked ?? Boolean(initialValue));
 
   const handlePress = () => {
     const newValue = !isChecked;
@@ -23,6 +25,12 @@ const StarCheckbox = ({
 
     if (onValueChange) onValueChange(newValue);
   };
+
+  useEffect(() => {
+    if (checked !== undefined) {
+      setIsChecked(checked);
+    }
+  }, [checked]);
 
   return (
     <Pressable
@@ -44,7 +52,7 @@ const StarCheckbox = ({
         height={size * 0.9}
         viewBox="0 0 24 24"
         fill={isChecked ? activeColor : 'none'}
-        stroke={isChecked ? activeColor : "#939393" }
+        stroke={isChecked ? activeColor : '#939393'}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

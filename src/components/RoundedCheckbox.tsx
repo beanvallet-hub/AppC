@@ -1,7 +1,8 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet } from 'react-native';
 
 type RoundedCheckbox = PropsWithChildren & {
+  checked?: boolean;
   initialValue?: boolean;
   onValueChange?: (newValue: boolean) => void;
   size?: number;
@@ -13,8 +14,9 @@ const RoundedCheckbox = ({
   onValueChange,
   size = 28,
   activeColor = '#007AFF',
+  checked
 }: RoundedCheckbox) => {
-  const [isChecked, setIsChecked] = useState(Boolean(initialValue));
+  const [isChecked, setIsChecked] = useState(checked ?? Boolean(initialValue));
 
   const handlePress = () => {
     const newValue = !isChecked;
@@ -22,6 +24,12 @@ const RoundedCheckbox = ({
 
     if (onValueChange) onValueChange(newValue);
   };
+
+  useEffect(() => {
+    if (checked !== undefined) {
+      setIsChecked(checked);
+    }
+  }, [checked]);
 
   return (
     <Pressable

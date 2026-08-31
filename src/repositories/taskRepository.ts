@@ -38,7 +38,7 @@ export async function getTaskById(
     return null;
   }
 
-  return result.rows[0] as Task;
+  return dbRecToJsObj(result.rows[0], booleanColumns) as Task;
 }
 
 

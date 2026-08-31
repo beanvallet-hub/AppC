@@ -13,8 +13,29 @@ import TokensScreen from './src/screens/TokensScreen';
 import { useLanguage } from './src/i18n/useLanguage';
 import { NavigationContainer } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {TaskDetailScreen} from './src/screens/TaskDetailScreen';
 
 const Tab = createNativeBottomTabNavigator();
+
+const RootStack = createNativeStackNavigator();
+
+function RootStackNavigator() {
+  return (
+    <RootStack.Navigator>
+      <RootStack.Screen
+        name="MainTabs"
+        component={TabNavigator}
+        options={{ headerShown: false }}
+      />
+
+      <RootStack.Screen
+        name="Task"
+        component={TaskDetailScreen}
+      />
+    </RootStack.Navigator>
+  );
+}
 
 export function TabNavigator() {
   const { translation } = useLanguage();
@@ -22,7 +43,7 @@ export function TabNavigator() {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="Homee"
+        name="Home"
         component={HomeScreen}
         options={{
           title: translation('navigation.home'),
@@ -93,7 +114,7 @@ function AppContent() {
 
   return (
     <NavigationContainer>
-      <TabNavigator />
+      <RootStackNavigator />
 
       <Toast />
     </NavigationContainer>
