@@ -33,6 +33,7 @@ export function TasksScreen({ navigation }) {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const [refreshOnFocus, setRefreshOnFoucs] = useState(false);
+  const [taskToRefresh, setTaskToRefresh] = useState<Task | null>(null);
 
   const { translation } = useLanguage();
 
@@ -57,9 +58,9 @@ export function TasksScreen({ navigation }) {
     useCallback(() => {
       let isActive = true;
 
-      if (refreshOnFocus && activeTask) {
+      if (refreshOnFocus && taskToRefresh) {
         
-        getTaskById(activeTask.id)
+        getTaskById(taskToRefresh.id)
           .then(updatedTask => {
 
             if (updatedTask && isActive) {
@@ -74,14 +75,14 @@ export function TasksScreen({ navigation }) {
             console.error('Error loading  updated task!', err);
           });
 
-        setActiveTask(null);
+        setTaskToRefresh(null);
         setRefreshOnFoucs(false);
       }
 
       return () => {
         isActive = false;
       };
-    }, [refreshOnFocus, activeTask]),
+    }, [refreshOnFocus, taskToRefresh]),
   );
 
   const handleSave = (
@@ -200,7 +201,7 @@ export function TasksScreen({ navigation }) {
   };
 
   const handleLongPress = (task: any) => {
-    setActiveTask(task);
+    setTaskToRefresh(task);
     setRefreshOnFoucs(true);
 
     navigation.navigate('Task', {
@@ -222,12 +223,12 @@ export function TasksScreen({ navigation }) {
   );
 
   return (
-    <SafeAreaView style={[styles.scrollView, { backgroundColor: 'white' }]}>
+    <SafeAreaView style={styles.screen}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <View style={styles.titleRow}>
-            <View style={{ flexGrow: 1 }}>
-              <Text style={{ fontSize: 24, fontWeight: 700 }}>
+            <View style={styles.titleLabelWrapper}>
+              <Text style={styles.titleText}>
                 {translation('navigation.tasks')}
               </Text>
             </View>
@@ -270,12 +271,9 @@ export function TasksScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
+  screen: {
     flex: 1,
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    backgroundColor: 'white',
   },
   container: {
     flexGrow: 1,
@@ -286,6 +284,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 24,
     paddingBottom: 12,
+  },
+  titleLabelWrapper: {
+    flexGrow: 1,
+  },
+  titleText: {
+    fontSize: 24,
+    fontWeight: 700,
   },
   centerText: {
     textAlign: 'center',

@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import RoundedCheckbox from '../components/RoundedCheckbox';
 import StarCheckbox from '../components/StarCheckbox';
 import Svg, { Path } from 'react-native-svg';
-import { updateTask } from '../repositories/taskRepository';
+import { Task, updateTask } from '../repositories/taskRepository';
 import { useCallback, useEffect, useState } from 'react';
 import {
   createReminder,
@@ -23,6 +23,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const defaultDate = () => {
   const now = new Date();
+
   now.setHours(now.getHours() + 24);
 
   return now;
@@ -30,25 +31,37 @@ const defaultDate = () => {
 
 export function TaskDetailScreen({ route }) {
   const safeAreaInsets = useSafeAreaInsets();
-  const [txt, setTxt] = useState('');
+  const [txt, setTxt] = useState('Task');
   const [comp, setComp] = useState(false);
   const [fav, setFav] = useState(false);
 
-  const [timeTxt, setTimeTxt] = useState('');
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [timeTxt, setTimeTxt] = useState(' ');
+  const [remind, setRemind] = useState(false);
+
   const [date, setDate] = useState(defaultDate);
   const [pickerMode, setPickerMode] = useState('date');
-  const [remind, setRemind] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const { task } = route.params;
 
   useEffect(() => {
-    setTxt(task.name);
-    setComp(task.isCompleted);
-    setFav(task.isFavorite);
-    setTimeTxt(task?.remindAt ? new Date(task.remindAt).toLocaleString() : ' ');
-    setDate(task?.remindAt ? new Date(task.remindAt) : defaultDate());
-    setRemind(!!task?.remindAt);
+    if (task) {
+      setTxt(task.name);
+      setComp(task.isCompleted);
+      setFav(task.isFavorite);
+
+      if (task.remindAt) {
+        const rdate = new Date(task.remindAt);
+
+        setTimeTxt(rdate.toLocaleString());
+        setDate(rdate);
+        setRemind(true);
+      } else {
+        setTimeTxt(' ');
+        setDate(defaultDate());
+        setRemind(false);
+      }
+    }
   }, [task]);
 
   const insets = {
@@ -69,76 +82,103 @@ export function TaskDetailScreen({ route }) {
     },
   });
 
-  const handleUpdate = task => {
-    updateTask(task).catch(err => {
-      console.log('Error: Failed update task!');
-      console.error('Error :>> ', err);
-    });
-  };
 
-  const handleReminder = date => {
-    if (task.remindAt) {
-      updateReminder({
-        id: `${task.id}`,
-        title: 'Task Reminder',
-        body: task.name,
-        date: date,
-      });
-    } else {
-      createReminder({
-        id: `${task.id}`,
-        title: 'Task Reminder',
-        body: task.name,
-        date: date,
-      });
-    }
-  };
+  const handleDateChange = useCallback(
+    (event: any, pickerMode: string, task: Task, selectedDate?: Date) => {
+      if (pickerMode === 'date') {
+        setPickerMode('time');
+      } else if (pickerMode === 'time') {
+        setPickerMode('date');
+        setShowDatePicker(false);
 
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-    if (pickerMode === 'date') {
-      setPickerMode('time');
-    } else if (pickerMode === 'time') {
-      setPickerMode('date');
-      setShowDatePicker(false);
+        setRemind(true);
 
-      setRemind(true);
+        if (selectedDate) {
+          updateTask({ ...task, remindAt: selectedDate.toISOString() }).catch(
+            err => {
+              console.log('Error: Failed update task!');
+              console.error('Error :>> ', err);
+            },
+          );
+
+          if (task.remindAt) {
+            updateReminder({
+              id: `${task.id}`,
+              title: 'Task Reminder',
+              body: task.name,
+              date: selectedDate,
+            });
+          } else {
+            createReminder({
+              id: `${task.id}`,
+              title: 'Task Reminder',
+              body: task.name,
+              date: selectedDate,
+            });
+          }
+          task.remindAt = selectedDate.toISOString();
+        }
+      }
 
       if (selectedDate) {
-        updateTask({ ...task, remindAt: selectedDate.toISOString() }).catch(
-          err => {
-            console.log('Error: Failed update task!');
-            console.error('Error :>> ', err);
-          },
-        );
-
-        handleReminder(selectedDate);
-        task.remindAt = selectedDate.toLocaleString();
+        setDate(selectedDate);
+        setTimeTxt(selectedDate.toLocaleString());
       }
+    },
+    [],
+  );
+
+  const handlePressRemind = useCallback((remind: boolean, task) => {
+    if (remind) {
+      setRemind(false);
+      setTimeTxt(' ');
+
+      task.remindAt = null;
+
+      updateTask({ ...task, remindAt: null }).catch(err => {
+        console.log('Error: Failed update task!');
+        console.error('Error :>> ', err);
+      });
+
+      deleteReminder(task.id);
+    } else {
+      setShowDatePicker(true);
+    }
+  }, []);
+
+  const debouncedUpdate = useCallback(
+    debounce((task) => {
+      updateTask(task).catch(err => {
+        console.log('Error: Failed update task!');
+        console.error('Error :>> ', err);
+      });
+    }, 600),
+    [],
+  );
+
+  const handleUpdate = useCallback((task, newValue, column) => {
+    task[column] = newValue;
+
+    if (column === 'name') {
+      setTxt(newValue);
+    } else if (column === 'isFavorite') {
+      setFav(newValue);
+    } else if (column === 'isCompleted') {
+      setComp(newValue);
     }
 
-    if (selectedDate) {
-      setDate(selectedDate);
-      setTimeTxt(selectedDate.toLocaleString());
-    }
-  };
-
-  const debouncedUpdate = useCallback(debounce(handleUpdate, 600), []);
+    debouncedUpdate(task);
+  }, [debouncedUpdate]);
 
   return (
-    <View style={[{ flex: 1, backgroundColor: 'white' }, contentPlatformStyle]}>
-      <ScrollView
-        style={[styles.scrollView]}
-        contentContainerStyle={[styles.contentContainer]}
-      >
+    <View style={[styles.screen, contentPlatformStyle]}>
+      <ScrollView style={styles.scrollView}>
         <View style={styles.titleContainer}>
           <TextInput
             style={styles.title}
             value={txt}
             onChangeText={t => {
-              task.name = t;
-              setTxt(t);
-
-              debouncedUpdate({ ...task, name: t });
+              handleUpdate(task, t, 'name');
             }}
           />
         </View>
@@ -147,11 +187,7 @@ export function TaskDetailScreen({ route }) {
           <Pressable
             style={styles.taskRectLeft}
             onPress={() => {
-              setComp(old => !old);
-
-              task.isCompleted = !task.isCompleted;
-
-              debouncedUpdate(task);
+              handleUpdate(task, !comp, 'isCompleted');
             }}
           >
             <RoundedCheckbox
@@ -159,25 +195,17 @@ export function TaskDetailScreen({ route }) {
               activeColor="#4560ee"
               checked={comp}
               onValueChange={() => {
-                setComp(old => !old);
-
-                task.isCompleted = !task.isCompleted;
-
-                debouncedUpdate(task);
+                handleUpdate(task, !comp, 'isCompleted');
               }}
             />
 
-            <Text style={{ marginLeft: 12 }}>Completed</Text>
+            <Text style={styles.checkboxLabel}>Completed</Text>
           </Pressable>
 
           <Pressable
             style={styles.taskRectLeft}
             onPress={() => {
-              setFav(old => !old);
-
-              task.isFavorite = !task.isFavorite;
-
-              debouncedUpdate(task);
+              handleUpdate(task, !fav, 'isFavorite');
             }}
           >
             <StarCheckbox
@@ -185,35 +213,17 @@ export function TaskDetailScreen({ route }) {
               activeColor="#4560ee"
               checked={fav}
               onValueChange={() => {
-                setFav(old => !old);
-
-                task.isFavorite = !task.isFavorite;
-
-                debouncedUpdate(task);
+                handleUpdate(task, !fav, 'isFavorite');
               }}
             />
 
-            <Text style={{ marginLeft: 12 }}>Favourite</Text>
+            <Text style={styles.checkboxLabel}>Favourite</Text>
           </Pressable>
 
           <Pressable
             style={styles.taskRectLeft}
             onPress={() => {
-              if (remind) {
-                setRemind(false);
-                setTimeTxt('');
-
-                task.remindAt = null;
-
-                updateTask({ ...task, remindAt: null }).catch(err => {
-                  console.log('Error: Failed update task!');
-                  console.error('Error :>> ', err);
-                });
-
-                deleteReminder(task.id);
-              } else {
-                setShowDatePicker(true);
-              }
+              handlePressRemind(remind, task);
             }}
           >
             <Svg
@@ -231,11 +241,11 @@ export function TaskDetailScreen({ route }) {
               <Path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
             </Svg>
 
-            <Text style={{ marginLeft: 12 }}>Remind Me</Text>
+            <Text style={styles.checkboxLabel}>Remind Me</Text>
           </Pressable>
 
           <Pressable
-            style={{ marginTop: 8, paddingLeft: 40 }}
+            style={styles.reminderButton}
             onPress={() => {
               setShowDatePicker(true);
             }}
@@ -249,7 +259,9 @@ export function TaskDetailScreen({ route }) {
         <DateTimePicker
           value={date}
           mode={pickerMode as any}
-          onValueChange={handleDateChange}
+          onValueChange={(event, newDate) => {
+            handleDateChange(event, pickerMode, task, newDate);
+          }}
           onDismiss={() => {
             setShowDatePicker(false);
             setPickerMode('date');
@@ -261,10 +273,12 @@ export function TaskDetailScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   scrollView: {
     flex: 1,
-  },
-  contentContainer: {
   },
   container: {
     flex: 1,
@@ -279,40 +293,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 700,
   },
-  centerText: {
-    color: 'skyblue',
+  checkboxLabel: {
+    marginLeft: 12,
   },
-  sectionsWrapper: {
-    gap: 20,
-    paddingHorizontal: 20,
-    paddingTop: 12,
-  },
-  paragraph: {
-    marginTop: 34,
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  textInput: {
-    height: 35,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    padding: 4,
+  reminderButton: {
     marginTop: 8,
-    borderRadius: 4,
-    color: 'black',
-  },
-  titleRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  checkboxBase: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
+    paddingLeft: 40,
   },
   taskRectLeft: {
     paddingTop: 12,

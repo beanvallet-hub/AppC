@@ -40,7 +40,7 @@ export function HomeScreen() {
         }
       })
       .catch(err => {
-        console.log('Error loading tasks!');
+        console.log('Error loading tasks!', err);
 
         Toast.show({
           type: 'error',
@@ -184,12 +184,12 @@ export function HomeScreen() {
   );
 
   return (
-    <SafeAreaView style={[styles.scrollView, { backgroundColor: 'white' }]}>
+    <SafeAreaView style={styles.screen}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <View style={styles.titleRow}>
-            <View style={{ flexGrow: 1 }}>
-              <Text style={{ fontSize: 24, fontWeight: 700 }}>
+            <View style={styles.titleLabelWrapper}>
+              <Text style={styles.titleText}>
                 {translation('navigation.home')}
               </Text>
             </View>
@@ -230,12 +230,9 @@ export function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
+  screen: {
     flex: 1,
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    backgroundColor: 'white',
   },
   container: {
     flexGrow: 1,
@@ -246,6 +243,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 24,
     paddingBottom: 12,
+  },
+  titleLabelWrapper: {
+    flexGrow: 1,
+  },
+  titleText: {
+    fontSize: 24,
+    fontWeight: 700,
   },
   centerText: {
     textAlign: 'center',

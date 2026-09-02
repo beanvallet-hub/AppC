@@ -15,6 +15,7 @@ import { SettingsModal } from '../components/SettingsModal';
 import { useLanguage } from '../i18n/useLanguage';
 import Toast from 'react-native-toast-message';
 import Svg, { Circle } from 'react-native-svg';
+import { fcmService } from '../services/fcmService';
 
 async function save(key: string, value: string) {
   await setSecureItem(key, value);
@@ -76,11 +77,8 @@ export default function TokensScreen() {
   });
 
   return (
-    <View style={[{ flex: 1, backgroundColor: 'white' }, contentPlatformStyle]}>
-      <ScrollView
-        style={[styles.scrollView]}
-        contentContainerStyle={[styles.contentContainer]}
-      >
+    <View style={[styles.screen, contentPlatformStyle]}>
+      <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
           <View style={styles.titleContainer}>
             <View style={styles.titleRow}>
@@ -94,17 +92,10 @@ export default function TokensScreen() {
                 }}
                 style={({ pressed }) => [
                   styles.checkboxBase,
-                  {
-                    width: 32,
-                    height: 32,
-                    borderColor: 'transparent',
-                    backgroundColor: 'transparent',
-                    opacity: pressed ? 0.8 : 1,
-                  },
+                  styles.menuButton,
+                  pressed && styles.menuButtonPressed,
                 ]}
               >
-                {/* <EllipsisVertical color="#939393" size={32} /> */}
-
                 <Svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="32"
@@ -152,7 +143,7 @@ export default function TokensScreen() {
                 placeholderTextColor="#999999"
               />
 
-              <View style={{ marginTop: 8 }}>
+              <View style={styles.buttonWrapper}>
                 <Button
                   title={translation('settingScreen.saveBtnTxt')}
                   onPress={() => {
@@ -177,6 +168,17 @@ export default function TokensScreen() {
               />
             </View>
           </View>
+
+          <View style={styles.fcmBtn}>
+            <Button
+              onPress={() => {
+                fcmService.getFcmToken().then((token) => {
+                  alert('FCM Token: ' + token);
+                });
+              }}
+              title="Get FCM Token"
+            />
+          </View>
         </View>
       </ScrollView>
 
@@ -186,12 +188,12 @@ export default function TokensScreen() {
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   scrollView: {
     flex: 1,
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
   },
   container: {
     flexGrow: 1,
@@ -229,6 +231,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     color: 'black',
   },
+  buttonWrapper: {
+    marginTop: 8,
+  },
   titleRow: {
     display: 'flex',
     flexDirection: 'row',
@@ -239,5 +244,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
+  },
+  menuButton: {
+    width: 32,
+    height: 32,
+    borderColor: 'transparent',
+    backgroundColor: 'transparent',
+  },
+  menuButtonPressed: {
+    opacity: 0.8,
+  },
+  fcmBtn: {
+    paddingLeft: 32,
+    paddingRight: 32,
+    paddingTop: 32,
+    paddingBottom: 32,
   },
 });

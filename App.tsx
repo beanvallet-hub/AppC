@@ -2,10 +2,13 @@ import './src/i18n';
 
 import { TasksScreen } from './src/screens/TasksScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
-import { ActivityIndicator, StatusBar, useColorScheme, View } from 'react-native';
 import {
-  SafeAreaProvider,
-} from 'react-native-safe-area-context';
+  ActivityIndicator,
+  StatusBar,
+  useColorScheme,
+  View,
+} from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createNativeBottomTabNavigator } from '@react-navigation/bottom-tabs/unstable';
 import { useEffect, useState } from 'react';
 import { initializeApp } from './src/initialize';
@@ -14,7 +17,13 @@ import { useLanguage } from './src/i18n/useLanguage';
 import { NavigationContainer } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {TaskDetailScreen} from './src/screens/TaskDetailScreen';
+import { TaskDetailScreen } from './src/screens/TaskDetailScreen';
+import { fcmService } from './src/services/fcmService';
+import { getMessaging } from '@react-native-firebase/messaging';
+
+getMessaging().setBackgroundMessageHandler(async remoteMessage => {
+  fcmService.handleNotificationDisplay(remoteMessage);
+});
 
 const Tab = createNativeBottomTabNavigator();
 
@@ -29,10 +38,7 @@ function RootStackNavigator() {
         options={{ headerShown: false }}
       />
 
-      <RootStack.Screen
-        name="Task"
-        component={TaskDetailScreen}
-      />
+      <RootStack.Screen name="Task" component={TaskDetailScreen} />
     </RootStack.Navigator>
   );
 }
@@ -62,7 +68,7 @@ export function TabNavigator() {
           tabBarIcon: {
             type: 'image',
             source: require('./assets/tabIcons/explore.png'),
-          }
+          },
         }}
       />
 
@@ -74,7 +80,7 @@ export function TabNavigator() {
           tabBarIcon: {
             type: 'image',
             source: require('./assets/tabIcons/token.png'),
-          }
+          },
         }}
       />
     </Tab.Navigator>
@@ -98,11 +104,18 @@ function AppContent() {
   useEffect(() => {
     initializeApp()
       .then(() => setReady(true))
-      .catch((error) => {
+      .catch(error => {
         console.error('Failed to initialize app:', error);
       });
-  }, []);
 
+    const unsubscribeOnMessage = fcmService.subscribeToForegroundMessages();
+    const unsubscribeOnTokenRefresh = fcmService.subscribeToTokenRefresh();
+
+    return () => {
+      unsubscribeOnMessage();
+      unsubscribeOnTokenRefresh();
+    };
+  }, []);
 
   if (!ready) {
     return (

@@ -44,47 +44,36 @@ export function SettingsModal({ isOpen, setIsOpen, onClose }: InputModalProps) {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-            }}
-          >
+          <View style={styles.headerRow}>
             <View>
               <Text style={styles.modalText}>
                 {translation('settings.title')}
               </Text>
             </View>
 
-            <View style={{ position: 'absolute', top: -24, right: -20 }}>
+            <View style={styles.closeButtonWrapper}>
               <Pressable
                 onPress={handleClose}
                 style={({ pressed }) => [
                   styles.checkboxBase,
-                  {
-                    width: 42,
-                    height: 42,
-                    borderColor: 'transparent',
-                    backgroundColor: 'transparent',
-                    opacity: pressed ? 0.8 : 1,
-                  },
+                  styles.closeButton,
+                  pressed && styles.closeButtonPressed,
                 ]}
               >
                 <Image
                   source={require('../../assets/icons/x.png')}
-                  style={{ width: 28, height: 28, tintColor: '#939393' }}
+                  style={styles.closeIcon}
                 />
               </Pressable>
             </View>
           </View>
 
           <View>
-            <Text style={{ fontSize: 20, fontWeight: 600 }}>
+            <Text style={styles.languageHeading}>
               {translation('settings.language')}
             </Text>
 
-            <Text style={{ fontSize: 16 }}>current: {language}</Text>
+            <Text style={styles.languageValue}>current: {language}</Text>
 
             <View style={styles.buttonView}>
               <Pressable
@@ -116,6 +105,37 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     marginTop: 30,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  closeButtonWrapper: {
+    position: 'absolute',
+    top: -24,
+    right: -20,
+  },
+  closeButton: {
+    width: 42,
+    height: 42,
+    borderColor: 'transparent',
+    backgroundColor: 'transparent',
+  },
+  closeButtonPressed: {
+    opacity: 0.8,
+  },
+  closeIcon: {
+    width: 28,
+    height: 28,
+    tintColor: '#939393',
+  },
+  languageHeading: {
+    fontSize: 20,
+    fontWeight: 600,
+  },
+  languageValue: {
+    fontSize: 16,
   },
   modalView: {
     margin: 20,
