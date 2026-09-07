@@ -13,6 +13,9 @@ export type LocalNotification = {
 
 const DEFAULT_CHANNEL_ID = 'default';
 
+/**
+ * Notification Display Service
+ */
 class NotificationService {
   async initialize() {
     await notifee.createChannel({

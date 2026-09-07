@@ -1,4 +1,4 @@
-package com.appc
+package com.rnbaseproject
 
 import android.app.Application
 import com.facebook.react.PackageList

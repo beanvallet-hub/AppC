@@ -8,15 +8,35 @@ buildscript {
         kotlinVersion = "2.2.0"
     }
     repositories {
+        gradlePluginPortal()
         google()
         mavenCentral()
+
+        maven { url 'https://developer.huawei.com/repo/' }   
     }
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+
+        // google-services firebase
         classpath("com.google.gms:google-services:4.5.0")
         classpath("com.google.firebase:firebase-appdistribution-gradle:5.3.0")
+
+        // huawei appGallery connect plugin
+        classpath 'com.huawei.agconnect:agcp:1.9.6.300'
+    }
+}
+
+allprojects {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+
+        maven {
+            url 'https://developer.huawei.com/repo/'
+        }
     }
 }
 

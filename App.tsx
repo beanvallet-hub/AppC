@@ -20,9 +20,30 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TaskDetailScreen } from './src/screens/TaskDetailScreen';
 import { fcmService } from './src/services/fcmService';
 import { getMessaging } from '@react-native-firebase/messaging';
+import { HmsLocalNotification, HmsPushEvent, HmsPushMessaging, RNRemoteMessage } from '@hmscore/react-native-hms-push';
 
 getMessaging().setBackgroundMessageHandler(async remoteMessage => {
   fcmService.handleNotificationDisplay(remoteMessage);
+});
+
+HmsPushMessaging.setBackgroundMessageHandler(dataMessage => {
+  HmsLocalNotification.localNotification({
+    [HmsLocalNotification.Attr.title]: '[Headless] DataMessage Received',
+    [HmsLocalNotification.Attr.message]: new RNRemoteMessage(
+      dataMessage,
+    ).getDataOfMap(),
+  })
+    .then(result => {
+      console.log('[Headless] DataMessage Received', result);
+    })
+    .catch(err => {
+      console.log(
+        '[LocalNotification Default] Error/Exception: ' +
+          JSON.stringify(err),
+      );
+    });
+
+  return Promise.resolve();
 });
 
 const Tab = createNativeBottomTabNavigator();
@@ -111,9 +132,20 @@ function AppContent() {
     const unsubscribeOnMessage = fcmService.subscribeToForegroundMessages();
     const unsubscribeOnTokenRefresh = fcmService.subscribeToTokenRefresh();
 
+    const onTokenReceivedListener = HmsPushEvent.onTokenReceived(result => {
+      console.log('onTokenReceived', result);
+    });
+
+    const onTokenErrorListener = HmsPushEvent.onTokenError(result => {
+      console.log('onTokenError', result);
+    });
+
     return () => {
       unsubscribeOnMessage();
       unsubscribeOnTokenRefresh();
+
+      onTokenErrorListener.remove();
+      onTokenReceivedListener.remove();
     };
   }, []);
 

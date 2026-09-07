@@ -1,4 +1,4 @@
-package com.appc
+package com.rnbaseproject
 
 import android.os.Bundle
 import com.swmansion.rnscreens.fragment.restoration.RNScreensFragmentFactory

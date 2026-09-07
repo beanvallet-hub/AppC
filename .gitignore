@@ -77,3 +77,11 @@ yarn-error.log
 .env
 /.temp
 .env.*
+
+# Push services
+**/agconnect-services.json
+**/google-services.json
+
+
+# keystore
+**/keystore.jks

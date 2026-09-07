@@ -16,6 +16,7 @@ import { useLanguage } from '../i18n/useLanguage';
 import Toast from 'react-native-toast-message';
 import Svg, { Circle } from 'react-native-svg';
 import { fcmService } from '../services/fcmService';
+import { hsmService } from '../services/hmsService';
 
 async function save(key: string, value: string) {
   await setSecureItem(key, value);
@@ -172,7 +173,7 @@ export default function TokensScreen() {
           <View style={styles.fcmBtn}>
             <Button
               onPress={() => {
-                fcmService.getFcmToken().then((token) => {
+                hsmService.getToken().then((token) => {
                   alert('FCM Token: ' + token);
                 });
               }}

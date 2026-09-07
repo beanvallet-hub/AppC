@@ -1,6 +1,9 @@
 import { getMessaging, getToken } from '@react-native-firebase/messaging';
 import { notificationService } from './notificationService';
 
+/**
+ * Firebase cloud messaging service
+ */
 class FcmService {
   async getFcmToken() {
     const hasPermission = await notificationService.hasPermission();
