@@ -18,33 +18,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TaskDetailScreen } from './src/screens/TaskDetailScreen';
-import { fcmService } from './src/services/fcmService';
-import { getMessaging } from '@react-native-firebase/messaging';
-import { HmsLocalNotification, HmsPushEvent, HmsPushMessaging, RNRemoteMessage } from '@hmscore/react-native-hms-push';
+import { pushService } from './src/services/PushService';
 
-getMessaging().setBackgroundMessageHandler(async remoteMessage => {
-  fcmService.handleNotificationDisplay(remoteMessage);
-});
 
-HmsPushMessaging.setBackgroundMessageHandler(dataMessage => {
-  HmsLocalNotification.localNotification({
-    [HmsLocalNotification.Attr.title]: '[Headless] DataMessage Received',
-    [HmsLocalNotification.Attr.message]: new RNRemoteMessage(
-      dataMessage,
-    ).getDataOfMap(),
-  })
-    .then(result => {
-      console.log('[Headless] DataMessage Received', result);
-    })
-    .catch(err => {
-      console.log(
-        '[LocalNotification Default] Error/Exception: ' +
-          JSON.stringify(err),
-      );
-    });
+pushService.initialize();
 
-  return Promise.resolve();
-});
 
 const Tab = createNativeBottomTabNavigator();
 
@@ -64,7 +42,7 @@ function RootStackNavigator() {
   );
 }
 
-export function TabNavigator() {
+function TabNavigator() {
   const { translation } = useLanguage();
 
   return (
@@ -129,23 +107,12 @@ function AppContent() {
         console.error('Failed to initialize app:', error);
       });
 
-    const unsubscribeOnMessage = fcmService.subscribeToForegroundMessages();
-    const unsubscribeOnTokenRefresh = fcmService.subscribeToTokenRefresh();
-
-    const onTokenReceivedListener = HmsPushEvent.onTokenReceived(result => {
-      console.log('onTokenReceived', result);
-    });
-
-    const onTokenErrorListener = HmsPushEvent.onTokenError(result => {
-      console.log('onTokenError', result);
-    });
+    const unsubscribeOnMessage = pushService.subscribeToForegroundMessages();
+    const unsubscribeOnTokenRefresh = pushService.subscribeToTokenRefresh();
 
     return () => {
-      unsubscribeOnMessage();
-      unsubscribeOnTokenRefresh();
-
-      onTokenErrorListener.remove();
-      onTokenReceivedListener.remove();
+      if (unsubscribeOnMessage && typeof unsubscribeOnMessage === 'function' ) unsubscribeOnMessage();
+      if (unsubscribeOnTokenRefresh && typeof unsubscribeOnTokenRefresh === 'function') unsubscribeOnTokenRefresh();
     };
   }, []);
 

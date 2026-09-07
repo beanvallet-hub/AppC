@@ -15,8 +15,7 @@ import { SettingsModal } from '../components/SettingsModal';
 import { useLanguage } from '../i18n/useLanguage';
 import Toast from 'react-native-toast-message';
 import Svg, { Circle } from 'react-native-svg';
-import { fcmService } from '../services/fcmService';
-import { hsmService } from '../services/hmsService';
+import { pushService } from '../services/PushService';
 
 async function save(key: string, value: string) {
   await setSecureItem(key, value);
@@ -173,11 +172,17 @@ export default function TokensScreen() {
           <View style={styles.fcmBtn}>
             <Button
               onPress={() => {
-                hsmService.getToken().then((token) => {
-                  alert('FCM Token: ' + token);
+                pushService.getToken().then(token => {
+                  Toast.show({
+                    type: 'info',
+                    text1: 'Device Token',
+                    text2: token ?? '',
+                    position: 'bottom',
+                    bottomOffset: 60,
+                  });
                 });
               }}
-              title="Get FCM Token"
+              title="Get Push Service Token"
             />
           </View>
         </View>
