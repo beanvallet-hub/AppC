@@ -11,7 +11,11 @@ module.exports = function (api) {
           path: '.env',
           allowUndefined: false,
         },
+        
       ],
+      [
+        'react-native-worklets/plugin',
+      ]
     ],
   };
 };

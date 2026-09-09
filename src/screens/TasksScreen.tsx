@@ -223,7 +223,7 @@ export function TasksScreen({ navigation }) {
   );
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <View style={styles.screen}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <View style={styles.titleRow}>
@@ -266,7 +266,7 @@ export function TasksScreen({ navigation }) {
         initialValue={activeTask}
         setIsOpen={setModalVisible}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

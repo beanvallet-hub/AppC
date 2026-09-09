@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 import { getSecureItem, setSecureItem } from '../utils/keychain';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SettingsModal } from '../components/SettingsModal';
 import { useLanguage } from '../i18n/useLanguage';
 import Toast from 'react-native-toast-message';
@@ -55,29 +54,11 @@ export default function TokensScreen() {
   const [value, onChangeValue] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const safeAreaInsets = useSafeAreaInsets();
   const { translation } = useLanguage();
 
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + 130,
-  };
-
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: 24,
-      paddingBottom: 16,
-    },
-  });
 
   return (
-    <View style={[styles.screen, contentPlatformStyle]}>
+    <View style={styles.screen}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
           <View style={styles.titleContainer}>

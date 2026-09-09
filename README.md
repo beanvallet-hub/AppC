@@ -34,6 +34,10 @@ npm run android
 npx react-native start --reset-cache
 ```
 
+### clear gradle cache
+cd android
+.\gradlew clean
+
 keytool -genkey -keystore D:\projects\AppC\android\app\keystore.jks -storepass Black521 -alias rnbasekey -keypass Black521 -dname "o=rnbase" -keysize 2048 -keyalg RSA -validity 3650
 
 

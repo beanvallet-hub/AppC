@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
 import { memo, useCallback, useEffect, useState } from 'react';
 import {
   createTask,
@@ -18,6 +18,7 @@ import {
   deleteReminder,
   updateReminder,
 } from '../services/reminderService';
+import { useNavigation } from '@react-navigation/native';
 
 const ITEM_HEIGHT = 60;
 
@@ -31,6 +32,7 @@ export function HomeScreen() {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const { translation } = useLanguage();
+  const navigation = useNavigation();
 
   useEffect(() => {
     getTasks()
@@ -184,7 +186,7 @@ export function HomeScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <View style={styles.screen}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <View style={styles.titleRow}>
@@ -192,6 +194,8 @@ export function HomeScreen() {
               <Text style={styles.titleText}>
                 {translation('navigation.home')}
               </Text>
+
+
             </View>
 
             <RoundedIconButton
@@ -225,7 +229,7 @@ export function HomeScreen() {
         initialValue={activeTask}
         setIsOpen={setModalVisible}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

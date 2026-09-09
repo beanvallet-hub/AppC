@@ -19,6 +19,9 @@ import Toast from 'react-native-toast-message';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TaskDetailScreen } from './src/screens/TaskDetailScreen';
 import { pushService } from './src/services/PushService';
+import { QRCodeScreen } from './src/screens/QRCodeScreen';
+import QRScannerScreen from './src/screens/QRScannerScreen';
+import { NavigationDrawer } from './src/components/NavigationDrawer';
 
 
 pushService.initialize();
@@ -38,6 +41,10 @@ function RootStackNavigator() {
       />
 
       <RootStack.Screen name="Task" component={TaskDetailScreen} />
+
+      <RootStack.Screen name="QRGenerator" component={QRCodeScreen} />
+
+      <RootStack.Screen name="QRScanner" component={QRScannerScreen} />
     </RootStack.Navigator>
   );
 }
@@ -126,7 +133,9 @@ function AppContent() {
 
   return (
     <NavigationContainer>
-      <RootStackNavigator />
+      <NavigationDrawer>
+        <RootStackNavigator />
+      </NavigationDrawer>
 
       <Toast />
     </NavigationContainer>

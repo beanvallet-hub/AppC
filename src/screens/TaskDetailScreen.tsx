@@ -1,5 +1,4 @@
 import {
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -7,7 +6,6 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import RoundedCheckbox from '../components/RoundedCheckbox';
 import StarCheckbox from '../components/StarCheckbox';
 import Svg, { Path } from 'react-native-svg';
@@ -30,7 +28,6 @@ const defaultDate = () => {
 };
 
 export function TaskDetailScreen({ route }) {
-  const safeAreaInsets = useSafeAreaInsets();
   const [txt, setTxt] = useState('Task');
   const [comp, setComp] = useState(false);
   const [fav, setFav] = useState(false);
@@ -63,25 +60,6 @@ export function TaskDetailScreen({ route }) {
       }
     }
   }, [task]);
-
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + 130,
-  };
-
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: 24,
-      paddingBottom: 16,
-    },
-  });
-
 
   const handleDateChange = useCallback(
     (event: any, pickerMode: string, task: Task, selectedDate?: Date) => {
@@ -171,7 +149,7 @@ export function TaskDetailScreen({ route }) {
   }, [debouncedUpdate]);
 
   return (
-    <View style={[styles.screen, contentPlatformStyle]}>
+    <View style={styles.screen}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.titleContainer}>
           <TextInput
