@@ -22,6 +22,9 @@ import { pushService } from './src/services/PushService';
 import { QRCodeScreen } from './src/screens/QRCodeScreen';
 import {QRScannerScreen} from './src/screens/QRScannerScreen';
 import { NavigationDrawer } from './src/components/NavigationDrawer';
+import { GradientShowScreen } from './src/screens/GradientShowScreen';
+import { GradientView } from './src/components/GradientView';
+import { gradients } from './src/theme/gradients';
 
 
 pushService.initialize();
@@ -42,9 +45,18 @@ function RootStackNavigator() {
 
       <RootStack.Screen name="Task" component={TaskDetailScreen} />
 
-      <RootStack.Screen name="QRGenerator" component={QRCodeScreen} />
+      <RootStack.Screen name="QR Generator" component={QRCodeScreen} />
 
-      <RootStack.Screen name="QRScanner" component={QRScannerScreen} />
+      <RootStack.Screen name="QR Scanner" component={QRScannerScreen} />
+
+      <RootStack.Screen name="Gradient Showcase" component={GradientShowScreen}
+        options={{
+          headerBackground: () => {
+            return <GradientView colors={gradients.primary.colors} style={{ flex: 1 }} direction='bottomToTop'/>
+          },
+          headerTintColor: 'white',
+        }}
+      />
     </RootStack.Navigator>
   );
 }
