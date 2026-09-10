@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import RoundedCheckbox from './RoundedCheckbox';
-import StarCheckbox from './StarCheckbox';
+import {RoundedCheckbox} from './RoundedCheckbox';
+import {StarCheckbox} from './StarCheckbox';
 import { Task } from '../repositories/taskRepository';
 import Svg, { Path } from 'react-native-svg';
 

@@ -1,10 +1,24 @@
 import { getUtils } from '@react-native-firebase/app';
 
+
+
+
+
+
+
 export function snakeToCamel(str: string): string {
   return str.replace(/([-_][a-z])/gi, group =>
     group.toUpperCase().replace('-', '').replace('_', ''),
   );
 }
+
+
+
+
+
+
+
+
 
 export function objectKeysToCamel<T extends Record<string, any>>(
   obj: T,
@@ -15,9 +29,22 @@ export function objectKeysToCamel<T extends Record<string, any>>(
   }, {} as Record<string, any>);
 }
 
+
+
+
+
+
+
 export function rowsToCamelCase<T>(rows: Record<string, any>[]): T[] {
   return rows.map(objectKeysToCamel) as T[];
 }
+
+
+
+
+
+
+
 
 export function dbRecToJsObj(
   obj: Record<string, unknown>,
@@ -36,12 +63,22 @@ export function dbRecToJsObj(
   }, {} as Record<string, unknown>);
 }
 
+
+
+
+
+
 export function rowsToJsRecords<T>(
   rows: Record<string, any>[],
   booleanColumns: Set<string>,
 ): T[] {
   return rows.map(row => dbRecToJsObj(row, booleanColumns)) as T[];
 }
+
+
+
+
+
 
 export async function checkPlayServicesAvailability() {
   const { status, isAvailable, hasResolution, isUserResolvableError } =
@@ -80,3 +117,23 @@ export async function checkPlayServicesAvailability() {
   console.log('Google Play Services unavailable; an alternate push provider may be used.');
   return false;
 }
+
+
+
+
+
+
+export const debounce = <T extends (...args: any[]) => void>(
+  callback: T,
+  delay: number
+) => {
+  let timer: ReturnType<typeof setTimeout>;
+
+  return (...args: Parameters<T>) => {
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+      callback(...args);
+    }, delay);
+  };
+};

@@ -49,7 +49,7 @@ async function getValueFor(key: string) {
   }
 }
 
-export default function TokensScreen() {
+export function TokensScreen() {
   const [key, onChangeKey] = useState('');
   const [value, onChangeValue] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);

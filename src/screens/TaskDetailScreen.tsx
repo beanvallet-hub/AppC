@@ -6,8 +6,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import RoundedCheckbox from '../components/RoundedCheckbox';
-import StarCheckbox from '../components/StarCheckbox';
+import {RoundedCheckbox} from '../components/RoundedCheckbox';
+import {StarCheckbox} from '../components/StarCheckbox';
 import Svg, { Path } from 'react-native-svg';
 import { Task, updateTask } from '../repositories/taskRepository';
 import { useCallback, useEffect, useState } from 'react';
@@ -16,7 +16,7 @@ import {
   deleteReminder,
   updateReminder,
 } from '../services/reminderService';
-import { debounce } from '../utils/debounce';
+import { debounce } from '../utils/utils';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const defaultDate = () => {

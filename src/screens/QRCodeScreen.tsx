@@ -5,8 +5,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import QRCode from 'react-native-qrcode-svg';
-import { debounce } from '../utils/debounce';
+import { debounce } from '../utils/utils';
+import { QRCodeGenerator } from '../components/QRCodeGenerator';
 
 const defaultValue = 'https://example.com';
 
@@ -14,7 +14,7 @@ export const QRCodeScreen = () => {
   const [value, setValue] = useState(defaultValue);
   const [qrValue, setQrValue] = useState(defaultValue);
 
-   const debouncedUpdate = useCallback(
+  const debouncedUpdate = useCallback(
     debounce((newVal) => {
       setQrValue(newVal);
     }, 600),
@@ -37,14 +37,7 @@ export const QRCodeScreen = () => {
         autoCorrect={false}
       />
 
-      <View style={styles.qrContainer}>
-        <QRCode
-          value={qrValue || ' '}
-          size={220}
-          color="black"
-          backgroundColor="white"
-        />
-      </View>
+      <QRCodeGenerator containerStyles={styles.qrContainer} size={200} color={'black'} backgroundColor={'white'} value={qrValue} />
 
       <Text style={styles.value}>
         {value}

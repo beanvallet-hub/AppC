@@ -10,7 +10,7 @@ type StarCheckbox = PropsWithChildren & {
   checked?: boolean;
 };
 
-const StarCheckbox = ({
+export const StarCheckbox = ({
   initialValue = false,
   onValueChange,
   size = 28,
@@ -70,5 +70,3 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
 });
-
-export default StarCheckbox;

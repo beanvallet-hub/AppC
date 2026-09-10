@@ -9,7 +9,7 @@ type RoundedCheckbox = PropsWithChildren & {
   activeColor: string;
 };
 
-const RoundedCheckbox = ({
+export const RoundedCheckbox = ({
   initialValue = false,
   onValueChange,
   size = 28,
@@ -69,5 +69,3 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
 });
-
-export default RoundedCheckbox;

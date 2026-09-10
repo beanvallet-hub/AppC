@@ -12,7 +12,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createNativeBottomTabNavigator } from '@react-navigation/bottom-tabs/unstable';
 import { useEffect, useState } from 'react';
 import { initializeApp } from './src/initialize';
-import TokensScreen from './src/screens/TokensScreen';
+import {TokensScreen} from './src/screens/TokensScreen';
 import { useLanguage } from './src/i18n/useLanguage';
 import { NavigationContainer } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -20,7 +20,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TaskDetailScreen } from './src/screens/TaskDetailScreen';
 import { pushService } from './src/services/PushService';
 import { QRCodeScreen } from './src/screens/QRCodeScreen';
-import QRScannerScreen from './src/screens/QRScannerScreen';
+import {QRScannerScreen} from './src/screens/QRScannerScreen';
 import { NavigationDrawer } from './src/components/NavigationDrawer';
 
 
