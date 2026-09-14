@@ -13,8 +13,9 @@ import { getSecureItem, setSecureItem } from '../utils/keychain';
 import { SettingsModal } from '../components/SettingsModal';
 import { useLanguage } from '../i18n/useLanguage';
 import Toast from 'react-native-toast-message';
-import Svg, { Circle } from 'react-native-svg';
+// import Svg, { Circle } from 'react-native-svg';
 import { pushService } from '../services/PushService';
+import ToastIcon from '../../assets/icons/toast-vertical.svg'
 
 async function save(key: string, value: string) {
   await setSecureItem(key, value);
@@ -77,21 +78,7 @@ export function TokensScreen() {
                   pressed && styles.menuButtonPressed,
                 ]}
               >
-                <Svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="#939393"
-                  stroke="#939393"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <Circle cx="12" cy="12" r="2" />
-                  <Circle cx="12" cy="5" r="2" />
-                  <Circle cx="12" cy="19" r="2" />
-                </Svg>
+                <ToastIcon />
               </Pressable>
             </View>
 

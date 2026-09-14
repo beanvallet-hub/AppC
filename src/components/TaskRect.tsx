@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import {RoundedCheckbox} from './RoundedCheckbox';
 import {StarCheckbox} from './StarCheckbox';
 import { Task } from '../repositories/taskRepository';
-import Svg, { Path } from 'react-native-svg';
+import BellIcon from '../../assets/icons/bell.svg';
 
 type TaskRectProps = {
   task: Task;
@@ -37,20 +37,7 @@ export function TaskRect({ task, onUpdate, onLongPress }: TaskRectProps) {
           <Text style={styles.taskName}>{task.name}</Text>
 
           {task.remindAt && (
-            <Svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill={'none'}
-              stroke={'#939393'}
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <Path d="M10.268 21a2 2 0 0 0 3.464 0" />
-              <Path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
-            </Svg>
+            <BellIcon />
           )}
         </Pressable>
       </View>

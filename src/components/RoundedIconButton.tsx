@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+// import Svg, { Path } from 'react-native-svg';
+import PlusIcon from '../../assets/icons/plus.svg';
 
 type RoundedIconButtonProps = PropsWithChildren & {
   onPress?: () => void;
@@ -32,20 +33,7 @@ export const RoundedIconButton = ({
       ]}
       {...rest}
     >
-      <Svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#FFFFFF"
-        stroke-width="4"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <Path d="M5 12h14" />
-        <Path d="M12 5v14" />
-      </Svg>
+      <PlusIcon width={24} height={24} />
     </Pressable>
   );
 };
