@@ -9,14 +9,10 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { RadialGradientView } from './RadialGradientView';
-
 export interface GradientButtonProps {
   title: string;
 
   onPress: () => void;
-
-  colors: readonly string[];
 
   disabled?: boolean;
 
@@ -26,51 +22,25 @@ export interface GradientButtonProps {
 
   textStyle?: StyleProp<TextStyle>;
 
-  borderRadius?: number;
-
-  /**
-   * Minimum height of the button.
-   */
-  height?: number;
-
-  /**
-   * Colors used when disabled.
-   */
-  disabledColors?: readonly string[];
-
-  /**
-   * Reduces opacity while pressing.
-   */
   pressedOpacity?: number;
 
-  /**
-   * Accessibility label.
-   */
   accessibilityLabel?: string;
 
   testID?: string;
 }
 
-export function RadialGradientButton({
+export function AppButton({
   title,
   onPress,
-  colors,
   disabled = false,
   loading = false,
   style,
   textStyle,
-  borderRadius = 12,
-  height = 52,
-  disabledColors = ['#BDBDBD', '#9E9E9E'],
   pressedOpacity = 0.85,
   accessibilityLabel,
   testID,
 }: GradientButtonProps) {
   const isDisabled = disabled || loading;
-
-  const activeColors = isDisabled
-    ? disabledColors
-    : colors;
 
   return (
     <Pressable
@@ -87,34 +57,23 @@ export function RadialGradientButton({
         styles.pressable,
         style,
         pressed &&
-          !isDisabled && {
-            opacity: pressedOpacity,
-          },
+        !isDisabled && {
+          opacity: pressedOpacity,
+        },
       ]}
     >
-      <RadialGradientView
-        colors={activeColors}
-        style={[
-          styles.gradient,
-          {
-            minHeight: height,
-            borderRadius,
-          },
-        ]}
-      >
-        {loading ? (
-          <ActivityIndicator
-            color="#FFFFFF"
-          />
-        ) : (
-          <Text
-            numberOfLines={1}
-            style={[styles.text, textStyle]}
-          >
-            {title}
-          </Text>
-        )}
-      </RadialGradientView>
+      {loading ? (
+        <ActivityIndicator
+          color="#FFFFFF"
+        />
+      ) : (
+        <Text
+          numberOfLines={1}
+          style={[styles.text, textStyle]}
+        >
+          {title}
+        </Text>
+      )}
     </Pressable>
   );
 }
@@ -122,13 +81,12 @@ export function RadialGradientButton({
 const styles = StyleSheet.create({
   pressable: {
     alignSelf: 'stretch',
-  },
-
-  gradient: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
     overflow: 'hidden',
+    minHeight: 52,
+    borderRadius: 8,
   },
 
   text: {

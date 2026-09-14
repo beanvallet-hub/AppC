@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { GradientView } from './GradientView';
+import { SvgGradientView } from './SvgGradientView';
 
 export interface GradientButtonProps {
   title: string;
@@ -61,7 +61,7 @@ export interface GradientButtonProps {
   testID?: string;
 }
 
-export function GradientButton({
+export function SvgGradientButton({
   title,
   onPress,
   colors,
@@ -103,7 +103,7 @@ export function GradientButton({
           },
       ]}
     >
-      <GradientView
+      <SvgGradientView
         colors={activeColors}
         direction={direction}
         style={[
@@ -126,7 +126,7 @@ export function GradientButton({
             {title}
           </Text>
         )}
-      </GradientView>
+      </SvgGradientView>
     </Pressable>
   );
 }

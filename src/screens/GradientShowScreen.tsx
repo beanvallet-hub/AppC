@@ -1,13 +1,13 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import { GradientView } from "../components/GradientView";
+import { SvgGradientView } from "../components/SvgGradientView";
 import { gradients } from "../theme/gradients";
-import { GradientButton } from "../components/GradientButton";
+import { SvgGradientButton } from "../components/SvgGradientButton";
 import { RadialGradientButton } from "../components/RadialGradientButton";
 
 export function GradientShowScreen() {
     return (
         <View style={styles.screen}>
-            <GradientView colors={gradients.blue.colors} style={styles.content}>
+            <SvgGradientView colors={gradients.blue.colors} style={styles.content}>
 
                 <View style={styles.content}>
                     <View style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}>
@@ -16,7 +16,7 @@ export function GradientShowScreen() {
 
 
                     <View style={{ padding: 12 }}>
-                        <GradientButton
+                        <SvgGradientButton
                             title="Login"
                             colors={gradients.sunset.colors}
                             onPress={() => {
@@ -30,14 +30,13 @@ export function GradientShowScreen() {
                         <RadialGradientButton
                             title="Sign In"
                             colors={gradients.success.colors}
-                            
+
                             onPress={() => {
                             }}
-                            direction="rightToLeft"
                         />
                     </View>
                 </View>
-            </GradientView>
+            </SvgGradientView>
         </View>
     );
 }
@@ -49,5 +48,19 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-    }
+    },
+    linearGradient: {
+    flex: 1,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5
+  },
+  buttonText: {
+    fontSize: 18,
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    margin: 10,
+    color: '#ffffff',
+    backgroundColor: 'transparent',
+  },
 });

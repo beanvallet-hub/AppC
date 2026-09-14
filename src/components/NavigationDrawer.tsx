@@ -27,12 +27,13 @@ function NavItem({ screen, title, onPress }) {
 }
 
 
-function DrawerList({ onPressListItem }) {
+export function DrawerList({ onPressListItem }) {
     return (
         <ScrollView>
             <NavItem onPress={onPressListItem} screen={'QR Generator'} title={'QR Generator'} />
             <NavItem onPress={onPressListItem} screen={'QR Scanner'} title={'QR Scanner'} />
             <NavItem onPress={onPressListItem} screen={'Gradient Showcase'} title={'Gradient Showcase'} />
+            <NavItem onPress={onPressListItem} screen={'Native Gradient'} title={'Native Gradient'} />
         </ScrollView>
     )
 }

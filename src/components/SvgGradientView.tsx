@@ -124,7 +124,7 @@ function getGradientCoordinates(
   }
 }
 
-export function GradientView({
+export function SvgGradientView({
   colors,
   locations,
   direction = 'leftToRight',

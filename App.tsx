@@ -4,15 +4,19 @@ import { TasksScreen } from './src/screens/TasksScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
 import {
   ActivityIndicator,
+  Platform,
   StatusBar,
   useColorScheme,
   View,
 } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import { createNativeBottomTabNavigator } from '@react-navigation/bottom-tabs/unstable';
 import { useEffect, useState } from 'react';
 import { initializeApp } from './src/initialize';
-import {TokensScreen} from './src/screens/TokensScreen';
+import { TokensScreen } from './src/screens/TokensScreen';
 import { useLanguage } from './src/i18n/useLanguage';
 import { NavigationContainer } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -20,15 +24,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TaskDetailScreen } from './src/screens/TaskDetailScreen';
 import { pushService } from './src/services/PushService';
 import { QRCodeScreen } from './src/screens/QRCodeScreen';
-import {QRScannerScreen} from './src/screens/QRScannerScreen';
+import { QRScannerScreen } from './src/screens/QRScannerScreen';
 import { NavigationDrawer } from './src/components/NavigationDrawer';
 import { GradientShowScreen } from './src/screens/GradientShowScreen';
-import { GradientView } from './src/components/GradientView';
+import { SvgGradientView } from './src/components/SvgGradientView';
 import { gradients } from './src/theme/gradients';
-
+import { NativeGradientScreen } from './src/screens/NativeGradientScreen';
 
 pushService.initialize();
-
 
 const Tab = createNativeBottomTabNavigator();
 
@@ -49,10 +52,36 @@ function RootStackNavigator() {
 
       <RootStack.Screen name="QR Scanner" component={QRScannerScreen} />
 
-      <RootStack.Screen name="Gradient Showcase" component={GradientShowScreen}
+      <RootStack.Screen
+        name="Gradient Showcase"
+        component={GradientShowScreen}
         options={{
           headerBackground: () => {
-            return <GradientView colors={gradients.primary.colors} style={{ flex: 1 }} direction='bottomToTop'/>
+            return (
+              <SvgGradientView
+                colors={gradients.primary.colors}
+                style={{ flex: 1 }}
+                direction="bottomToTop"
+              />
+            );
+          },
+          headerTintColor: 'white',
+        }}
+      />
+      <RootStack.Screen
+        name="Native Gradient"
+        component={NativeGradientScreen}
+        options={{
+          headerBackground: () => {
+            return (
+              <View
+                style={{
+                  flex: 1,
+                  backgroundImage:
+                    'radial-gradient(ellipse farthest-corner at 30% 40%, red, blue)',
+                }}
+              />
+            );
           },
           headerTintColor: 'white',
         }}
@@ -118,6 +147,22 @@ function App() {
 
 function AppContent() {
   const [ready, setReady] = useState(false);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
+  const safeAreaInsets = useSafeAreaInsets();
+
+  const contentPlatformStyle = Platform.select({
+    android: {
+      paddingTop: safeAreaInsets.top,
+      paddingLeft: safeAreaInsets.left,
+      paddingRight: safeAreaInsets.right,
+      paddingBottom: 0,
+    },
+    web: {
+      paddingTop: 24,
+      paddingBottom: 16,
+    },
+  });
 
   useEffect(() => {
     initializeApp()
@@ -130,8 +175,13 @@ function AppContent() {
     const unsubscribeOnTokenRefresh = pushService.subscribeToTokenRefresh();
 
     return () => {
-      if (unsubscribeOnMessage && typeof unsubscribeOnMessage === 'function' ) unsubscribeOnMessage();
-      if (unsubscribeOnTokenRefresh && typeof unsubscribeOnTokenRefresh === 'function') unsubscribeOnTokenRefresh();
+      if (unsubscribeOnMessage && typeof unsubscribeOnMessage === 'function')
+        unsubscribeOnMessage();
+      if (
+        unsubscribeOnTokenRefresh &&
+        typeof unsubscribeOnTokenRefresh === 'function'
+      )
+        unsubscribeOnTokenRefresh();
     };
   }, []);
 
