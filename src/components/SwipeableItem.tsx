@@ -10,7 +10,7 @@ import {
 import { TaskRect } from './TaskRect';
 
 
-const SWIPE_THRESHOLD = -80;
+const SWIPE_THRESHOLD = -80; 
 
 export function SwipeableItem({ item, onDelete, onUpdate, onLongPress }) {
   const translateX = useRef(new Animated.Value(0)).current;

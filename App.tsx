@@ -30,6 +30,8 @@ import { GradientShowScreen } from './src/screens/GradientShowScreen';
 import { SvgGradientView } from './src/components/SvgGradientView';
 import { gradients } from './src/theme/gradients';
 import { NativeGradientScreen } from './src/screens/NativeGradientScreen';
+import { AnimationView } from './src/components/AnimationView';
+import { AnimationScreen } from './src/screens/AnimationScreen';
 
 pushService.initialize();
 
@@ -51,6 +53,8 @@ function RootStackNavigator() {
       <RootStack.Screen name="QR Generator" component={QRCodeScreen} />
 
       <RootStack.Screen name="QR Scanner" component={QRScannerScreen} />
+
+      <RootStack.Screen name="Animations" component={AnimationScreen} />
 
       <RootStack.Screen
         name="Gradient Showcase"
@@ -188,7 +192,7 @@ function AppContent() {
   if (!ready) {
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        <ActivityIndicator />
+        <AnimationView />
       </View>
     );
   }
