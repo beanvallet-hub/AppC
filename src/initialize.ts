@@ -2,7 +2,7 @@ import "@/api/client";
 import { getDatabase } from "@/database/database";
 import { migrate } from "@/database/migrations";
 import { loadSampleData } from "@/database/sample-data";
-import { initializeI18n } from "@/i18n";
+import { initializeI18n } from "@/i18n/initI18n";
 import { notificationService } from "@/services/notificationService";
 
 

@@ -1,6 +1,6 @@
 import { getDatabase } from '@/database/database';
 import { SupportedLanguage } from '@/i18n/config';
-import { dbRecToJsObj } from '@/utils/utils';
+import { dbRecToJsObj } from '@/utils';
 
 
 export type Application = {

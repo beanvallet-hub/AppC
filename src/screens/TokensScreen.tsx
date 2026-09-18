@@ -1,6 +1,5 @@
 import {
   Button,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -9,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import { useState } from 'react';
-import { getSecureItem, setSecureItem } from '@/utils/keychain';
+import { getSecureItem, setSecureItem } from '@/services/keychainService';
 import { SettingsModal } from '@/components/SettingsModal';
 import { useLanguage } from '@/i18n/useLanguage';
 import Toast from 'react-native-toast-message';

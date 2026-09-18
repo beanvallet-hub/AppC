@@ -1,5 +1,5 @@
 import { getDatabase } from '@/database/database';
-import { dbRecToJsObj, rowsToJsRecords } from '@/utils/utils';
+import { dbRecToJsObj, dbRecordsToJsObjects } from '@/utils';
 
 export type Task = {
     id: number;
@@ -49,7 +49,7 @@ export async function getTasks(): Promise<Task[]> {
         'SELECT * FROM tasks'
     );
 
-    return rowsToJsRecords<Task>(result.rows as any, booleanColumns);
+    return dbRecordsToJsObjects<Task>(result.rows as any, booleanColumns);
 }
 
 

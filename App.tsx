@@ -1,4 +1,4 @@
-import '@/i18n';
+import '@/i18n/initI18n';
 
 import {
   ActivityIndicator,
