@@ -1,7 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-// import Svg, { Path } from 'react-native-svg';
-import PlusIcon from '../../assets/icons/plus.svg';
+import PlusIcon from '@assets/icons/plus.svg';
 
 type RoundedIconButtonProps = PropsWithChildren & {
   onPress?: () => void;

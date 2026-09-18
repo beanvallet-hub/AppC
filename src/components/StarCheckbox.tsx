@@ -1,7 +1,6 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-// import Svg, { Path } from 'react-native-svg';
-import StarIcon from '../../assets/icons/star.svg';
+import StarIcon from '@assets/icons/star.svg';
 
 type StarCheckbox = PropsWithChildren & {
   initialValue?: boolean;

@@ -4,7 +4,7 @@ import {
   HmsPushMessaging,
   RNRemoteMessage,
 } from '@hmscore/react-native-hms-push';
-import { AbstractPushProvider } from './AbstractPushProvider';
+import { AbstractPushProvider } from '@/services/AbstractPushProvider';
 
 export class HmsPushProvider extends AbstractPushProvider {
   name: string;

@@ -1,24 +1,26 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import { SvgGradientView } from "../components/SvgGradientView";
-import { gradients } from "../theme/gradients";
-import { SvgGradientButton } from "../components/SvgGradientButton";
-import { RadialGradientButton } from "../components/RadialGradientButton";
+import { SvgGradientView } from "@/components/SvgGradientView";
+import { SvgGradientButton } from "@/components/SvgGradientButton";
+import { RadialGradientButton } from "@/components/RadialGradientButton";
+import { useAppTheme } from "@/theme";
 
 export function GradientShowScreen() {
+    const theme = useAppTheme();
+
     return (
         <View style={styles.screen}>
-            <SvgGradientView colors={gradients.blue.colors} style={styles.content}>
+            <SvgGradientView colors={theme.gradients.blue.colors} style={styles.content}>
 
                 <View style={styles.content}>
                     <View style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}>
-                        <Image source={require('../../assets/images/basketball-on-fire.png')} style={{ width: 610, height: 1200 }} />
+                        <Image source={require('@assets/images/basketball-on-fire.png')} style={{ width: 610, height: 1200 }} />
                     </View>
 
 
                     <View style={{ padding: 12 }}>
                         <SvgGradientButton
                             title="Login"
-                            colors={gradients.sunset.colors}
+                            colors={theme.gradients.sunset.colors}
                             onPress={() => {
 
                             }}
@@ -29,7 +31,7 @@ export function GradientShowScreen() {
                     <View style={{ padding: 12 }}>
                         <RadialGradientButton
                             title="Sign In"
-                            colors={gradients.success.colors}
+                            colors={theme.gradients.success.colors}
 
                             onPress={() => {
                             }}

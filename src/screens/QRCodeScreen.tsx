@@ -5,8 +5,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { debounce } from '../utils/utils';
-import { QRCodeGenerator } from '../components/QRCodeGenerator';
+import { debounce } from '@/utils/utils';
+import { QRCodeGenerator } from '@/components/QRCodeGenerator';
 
 const defaultValue = 'https://example.com';
 

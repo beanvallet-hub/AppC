@@ -14,6 +14,16 @@ module.exports = function (api) {
         
       ],
       [
+        'module-resolver',
+        {
+          root: ['./'],
+          alias: {
+            '@': './src',
+            '@assets': './assets',
+          },
+        },
+      ],
+      [
         'react-native-worklets/plugin',
       ]
     ],

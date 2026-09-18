@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { SvgGradientView } from './SvgGradientView';
+import { SvgGradientView } from '@/components/SvgGradientView';
 
 export interface GradientButtonProps {
   title: string;

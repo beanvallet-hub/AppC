@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import QRCode from "react-native-qrcode-svg";
-import { createQRPayload } from "../services/qrCodeService";
+import { createQRPayload } from "@/services/qrCodeService";
 
 
 export function QRCodeGenerator({ value, size, color, backgroundColor, containerStyles, ...rest }) {

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { TaskRect } from './TaskRect';
+import { TaskRect } from '@/components/TaskRect';
 
 
 const SWIPE_THRESHOLD = -80; 

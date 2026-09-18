@@ -1,4 +1,4 @@
-import { axiosIns } from './client';
+import { axiosIns } from '@/api/client';
 
 const RESOURCE_URL = '/task';
 

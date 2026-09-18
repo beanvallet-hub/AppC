@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
-import { QRCodeScanner } from '../components/QRCodeScanner';
+import { QRCodeScanner } from '@/components/QRCodeScanner';
 
 export function QRScannerScreen() {
   const [scannedValue, setScannedValue] = useState<string | null>(null);

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, StyleSheet, Text, View } from 'react-native';
 import { Camera } from 'react-native-camera-kit';
-import { parseQRPayload } from '../services/qrCodeService';
-import { useCameraPermission } from '../hooks/useCameraPermission';
+import { parseQRPayload } from '@/services/qrCodeService';
+import { useCameraPermission } from '@/hooks/useCameraPermission';
 
 export const QRCodeScanner = ({ onQRScanned, showInstructions, isActive }) => {
     const {

@@ -6,7 +6,7 @@ export function AnimationView() {
   return (
     <View style={styles.container}>
       <LottieView
-        source={require('../../assets/animations/loading_spinner.json')}
+        source={require('@assets/animations/loading_spinner.json')}
         autoPlay
         loop
         style={styles.animation}

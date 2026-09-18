@@ -6,18 +6,18 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {RoundedCheckbox} from '../components/RoundedCheckbox';
-import {StarCheckbox} from '../components/StarCheckbox';
-import { Task, updateTask } from '../repositories/taskRepository';
+import {RoundedCheckbox} from '@/components/RoundedCheckbox';
+import {StarCheckbox} from '@/components/StarCheckbox';
+import { Task, updateTask } from '@/repositories/taskRepository';
 import { useCallback, useEffect, useState } from 'react';
 import {
   createReminder,
   deleteReminder,
   updateReminder,
-} from '../services/reminderService';
-import { debounce } from '../utils/utils';
+} from '@/services/reminderService';
+import { debounce } from '@/utils/utils';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { BellIcon } from '../components/BellIcon';
+import { BellIcon } from '@/components/BellIcon';
 
 const defaultDate = () => {
   const now = new Date();

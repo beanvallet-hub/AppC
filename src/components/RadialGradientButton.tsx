@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { RadialGradientView } from './RadialGradientView';
+import { RadialGradientView } from '@/components/RadialGradientView';
 
 export interface GradientButtonProps {
   title: string;

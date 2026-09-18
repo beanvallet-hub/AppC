@@ -1,11 +1,11 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import { AppButton } from "../components/AppButton";
+import { AppButton } from "@/components/AppButton";
 
 export function NativeGradientScreen() {
     return (
         <View style={styles.screen}>
             <View style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}>
-                <Image source={require('../../assets/images/basketball-on-fire.png')} style={{ width: 610, height: 1200 }} />
+                <Image source={require('@assets/images/basketball-on-fire.png')} style={{ width: 610, height: 1200 }} />
             </View>
 
             <AppButton

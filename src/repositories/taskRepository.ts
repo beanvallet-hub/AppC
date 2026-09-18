@@ -1,5 +1,5 @@
-import { getDatabase } from '../database/database';
-import { dbRecToJsObj, rowsToJsRecords } from '../utils/utils';
+import { getDatabase } from '@/database/database';
+import { dbRecToJsObj, rowsToJsRecords } from '@/utils/utils';
 
 export type Task = {
     id: number;

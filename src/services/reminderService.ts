@@ -1,4 +1,4 @@
-import { notificationService } from './notificationService';
+import { notificationService } from '@/services/notificationService';
 
 type CreateReminderDto = {
   id: string;

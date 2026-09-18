@@ -4,7 +4,7 @@ import {
   getToken as fcmGetToken,
   isSupported
 } from '@react-native-firebase/messaging';
-import { AbstractPushProvider } from './AbstractPushProvider';
+import { AbstractPushProvider } from '@/services/AbstractPushProvider';
 
 export class FcmPushProvider extends AbstractPushProvider {
   name: string;

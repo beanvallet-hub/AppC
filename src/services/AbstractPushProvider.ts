@@ -1,4 +1,4 @@
-import { notificationService } from './notificationService';
+import { notificationService } from '@/services/notificationService';
 
 export abstract class AbstractPushProvider {
   abstract readonly name: string;

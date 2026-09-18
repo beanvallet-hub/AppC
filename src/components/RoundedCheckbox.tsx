@@ -55,7 +55,7 @@ export const RoundedCheckbox = ({
             width: size * 0.6,
             height: size * 0.6,
           }}
-          source={require('../../assets/icons/check.png')}
+          source={require('@assets/icons/check.png')}
         />
       )}
     </Pressable>

@@ -1,8 +1,8 @@
 import { Platform } from 'react-native';
 import { getUtils } from '@react-native-firebase/app';
-import { AbstractPushProvider } from './AbstractPushProvider';
-import { FcmPushProvider } from './FcmPushProvider';
-import { HmsPushProvider } from './HmsPushProvider';
+import { AbstractPushProvider } from '@/services/AbstractPushProvider';
+import { FcmPushProvider } from '@/services/FcmPushProvider';
+import { HmsPushProvider } from '@/services/HmsPushProvider';
 
 class PushService extends AbstractPushProvider {
   name: string;

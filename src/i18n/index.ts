@@ -1,14 +1,14 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import { en } from './locales/en';
-import { si } from './locales/si';
+import { en } from '@/i18n/locales/en';
+import { si } from '@/i18n/locales/si';
 
 import {
   FALLBACK_LANGUAGE,
   SUPPORTED_LANGUAGES
-} from './config';
-import { getApplication } from '../repositories/applicationRepository';
+} from '@/i18n/config';
+import { getApplication } from '@/repositories/applicationRepository';
 
 const resources = {
   en: {

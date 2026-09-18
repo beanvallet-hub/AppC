@@ -7,18 +7,17 @@ import {
   getTasks,
   Task,
   updateTask,
-} from '../repositories/taskRepository';
-import { InputModal } from '../components/InputModal';
-import { RoundedIconButton } from '../components/RoundedIconButton';
-import { SwipeableItem } from '../components/SwipeableItem';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLanguage } from '../i18n/useLanguage';
+} from '@/repositories/taskRepository';
+import { InputModal } from '@/components/InputModal';
+import { RoundedIconButton } from '@/components/RoundedIconButton';
+import { SwipeableItem } from '@/components/SwipeableItem';
+import { useLanguage } from '@/i18n/useLanguage';
 import Toast from 'react-native-toast-message';
 import {
   createReminder,
   deleteReminder,
   updateReminder,
-} from '../services/reminderService';
+} from '@/services/reminderService';
 import { useFocusEffect } from '@react-navigation/native';
 
 const ITEM_HEIGHT = 60;

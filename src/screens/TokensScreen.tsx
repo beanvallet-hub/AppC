@@ -9,13 +9,13 @@ import {
   View,
 } from 'react-native';
 import { useState } from 'react';
-import { getSecureItem, setSecureItem } from '../utils/keychain';
-import { SettingsModal } from '../components/SettingsModal';
-import { useLanguage } from '../i18n/useLanguage';
+import { getSecureItem, setSecureItem } from '@/utils/keychain';
+import { SettingsModal } from '@/components/SettingsModal';
+import { useLanguage } from '@/i18n/useLanguage';
 import Toast from 'react-native-toast-message';
-// import Svg, { Circle } from 'react-native-svg';
-import { pushService } from '../services/PushService';
-import ToastIcon from '../../assets/icons/toast-vertical.svg'
+import { pushService } from '@/services/PushService';
+import ToastIcon from '@assets/icons/toast-vertical.svg';
+import { LoadingBar } from '@/components/LoadingBar';
 
 async function save(key: string, value: string) {
   await setSecureItem(key, value);
@@ -54,9 +54,9 @@ export function TokensScreen() {
   const [key, onChangeKey] = useState('');
   const [value, onChangeValue] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0.0);
 
   const { translation } = useLanguage();
-
 
   return (
     <View style={styles.screen}>
@@ -152,6 +152,30 @@ export function TokensScreen() {
               }}
               title="Get Push Service Token"
             />
+          </View>
+
+          <View style={{ flex: 1, padding: 16, justifyContent: 'center' }}>
+            <LoadingBar progress={loadingProgress} backgroudColor="#b6b6b6" />
+
+            <View style={{ marginTop: 12, rowGap: 12 }}>
+              <Button
+                title="Increase"
+                onPress={() => {
+                  setLoadingProgress(prev => {
+                    return Math.min(prev + 0.2, 1);
+                  });
+                }}
+              />
+
+              <Button
+                title="Decrease"
+                onPress={() => {
+                  setLoadingProgress(prev => {
+                    return Math.max(0, prev - 0.2);
+                  });
+                }}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>

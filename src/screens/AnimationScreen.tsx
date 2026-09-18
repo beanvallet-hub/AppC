@@ -7,7 +7,7 @@ export function AnimationScreen() {
     <ScrollView style={styles.root}>
       <View style={styles.container}>
         <LottieView
-          source={require('../../assets/animations/loading_bricks.json')}
+          source={require('@assets/animations/loading_bricks.json')}
           autoPlay
           loop
           style={styles.animation}
@@ -15,7 +15,7 @@ export function AnimationScreen() {
       </View>
       <View style={styles.container}>
         <LottieView
-          source={require('../../assets/animations/loading_bar.json')}
+          source={require('@assets/animations/loading_bar.json')}
           autoPlay
           loop
           style={styles.animation}

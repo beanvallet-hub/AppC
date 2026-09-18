@@ -9,8 +9,8 @@ import {
   Platform,
 } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
-import { useLanguage } from '../i18n/useLanguage';
-import { Task } from '../repositories/taskRepository';
+import { useLanguage } from '@/i18n/useLanguage';
+import { Task } from '@/repositories/taskRepository';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 type InputModalProps = {

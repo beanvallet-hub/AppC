@@ -1,8 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import {RoundedCheckbox} from './RoundedCheckbox';
-import {StarCheckbox} from './StarCheckbox';
-import { Task } from '../repositories/taskRepository';
-import BellIcon from '../../assets/icons/bell.svg';
+import {RoundedCheckbox} from '@/components/RoundedCheckbox';
+import {StarCheckbox} from '@/components/StarCheckbox';
+import { Task } from '@/repositories/taskRepository';
+import BellIcon from '@assets/icons/bell.svg';
 
 type TaskRectProps = {
   task: Task;
