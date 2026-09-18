@@ -1,4 +1,4 @@
-import { getDatabase } from '@/database/database';
+import { getDatabase } from '@/database';
 import { dbRecToJsObj, dbRecordsToJsObjects } from '@/utils';
 
 export type Task = {

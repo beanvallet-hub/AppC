@@ -1,23 +1,10 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { memo, useCallback, useEffect, useState } from 'react';
-import {
-  createTask,
-  deleteTask,
-  getTasks,
-  Task,
-  updateTask,
-} from '@/api/task.api';
-import { InputModal } from '@/components/InputModal';
-import { RoundedIconButton } from '@/components/RoundedIconButton';
-import { SwipeableItem } from '@/components/SwipeableItem';
-import { useLanguage } from '@/i18n/useLanguage';
+import { createTask, deleteTask, getTasks, Task, updateTask } from '@/api';
+import { InputModal, RoundedIconButton, SwipeableItem } from '@/components';
+import { useLanguage } from '@/i18n';
 import Toast from 'react-native-toast-message';
-import {
-  createReminder,
-  deleteReminder,
-  updateReminder,
-} from '@/services/reminderService';
-import { useNavigation } from '@react-navigation/native';
+import { createReminder, deleteReminder, updateReminder } from '@/services';
 
 const ITEM_HEIGHT = 60;
 
@@ -31,7 +18,6 @@ export function HomeScreen() {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const { translation } = useLanguage();
-  const navigation = useNavigation();
 
   useEffect(() => {
     getTasks()
@@ -193,8 +179,6 @@ export function HomeScreen() {
               <Text style={styles.titleText}>
                 {translation('navigation.home')}
               </Text>
-
-
             </View>
 
             <RoundedIconButton

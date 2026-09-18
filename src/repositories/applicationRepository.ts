@@ -60,3 +60,45 @@ export async function updateAppLang(newLang: SupportedLanguage) {
         throw error;
     }
 }
+
+// type PreferenceValue = string | number | boolean | null;
+
+// async function setPreference(
+//   key: string,
+//   value: PreferenceValue,
+// ) {
+//   await db.execute(
+//     `INSERT OR REPLACE INTO app_preferences (key, value)
+//      VALUES (?, ?)`,
+//     [key, value === null ? null : String(value)],
+//   );
+// }
+
+// async function getPreference(
+//   key: string,
+// ): Promise<string | null> {
+//   const result = await db.execute(
+//     `SELECT value FROM app_preferences WHERE key = ?`,
+//     [key],
+//   );
+
+//   return result.rows?._array?.[0]?.value ?? null;
+// }
+
+// const preferences = {
+//   async getTheme() {
+//     return getPreference('theme');
+//   },
+
+//   async setTheme(theme: 'light' | 'dark') {
+//     return setPreference('theme', theme);
+//   },
+
+//   async getLanguage() {
+//     return getPreference('language');
+//   },
+
+//   async setLanguage(language: string) {
+//     return setPreference('language', language);
+//   },
+// };

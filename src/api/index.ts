@@ -1,2 +1,2 @@
 export { axiosIns } from '@/api/client';
-export { getTask, createTask, getTasks, updateTask, deleteTask } from '@/api/task.api';
+export { getTask, createTask, getTasks, updateTask, deleteTask, type Task } from '@/api/task.api';
